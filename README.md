@@ -56,13 +56,14 @@ worktable(SZAoutput) :all_in_one.sh         csv_processor.py          savecsv.sh
 -----
 
 # Input scale as followed(saved in faultinject.oy):
-benchmark name 	| archive_1028/reference input	| now				|state
-amg		| -n,5,5,5			| -n,5,5,5			|done
-backprop	| 655360			| 655360			|
-bfs		|				| 				|done
-FFT		|				|				|doing
-HPCCG		| nx=50 ny=50 nz=50 iter=150	| nx=50 ny=50 nz=50 iter=150	|doing
-HPL		| N=1000			| N=1000			|done
-knn		| '5', '30', '90'		| '5', '30', '90'		|
-lu		| '-s512'			|				|
-miniFE		| '20','30','10'		| '20','30','10'		|done
+|benchmark name 	| archive_1028/reference input	| now				|state|
+|---|---|---|---|
+amg		| -n,5,5,5			| -n,5,5,5			|done  
+backprop	| 655360			| 655360			|  
+bfs		|				| 				|done  
+FFT		|				|				|doing  
+HPCCG		| nx=50 ny=50 nz=50 iter=150	| nx=50 ny=50 nz=50 iter=150	|doing  
+HPL		| N=1000			| N=1000			|done  
+knn		| '5', '30', '90'		| '5', '30', '90'		|  
+lu		| '-s512'			|				|  
+miniFE		| '20','30','10'		| '20','30','10'		|done  
