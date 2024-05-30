@@ -42,13 +42,14 @@ def find_in_dac():
         with open(filepath,'r') as f:
                 lines = f.readlines()
 	countl =len(data)
-	count = 0
+	count = 0 
 	for line in lines:
 		if count >= countl:
 			break
 		if '0000000000' in line[0:10]:
 			fuc = line[17:-2]
 		ip = data.loc[count,"IP"]
+		ip = ip.replace('0x','')
 		if ip in line:
 			tmp =line[32:62]
 			tmp =' '.join(tmp.split())
@@ -65,16 +66,18 @@ def find_in_dac():
 			
 			count += 1
 			if count < countl:
-				next_ip = data.loc[count,"IP"]
+				next_ip = data.loc[count,"IP"].replace('0x','')
 				while next_ip == ip :	# same ip followed
-					if count == countl-1:
+					if count == countl:
                                                 break
 					INS_FULL.append(ins_full)
 					INS.append(ins)
 					FUC.append(fuc)
 					count += 1
-					next_ip = data.loc[count,"IP"]
-					print FUC[-1],'\t',count,'\t',ip,ins,ins_full
+					if count == countl:
+						break
+					next_ip = data.loc[count,"IP"].replace('0x','')
+					#print FUC[-1],'\t',count,'\t',ip,ins,ins_full
 	print "INS data:", len(INS),len(data)
 	data['INS'] = INS 
         data['INS_FULL'] = INS_FULL

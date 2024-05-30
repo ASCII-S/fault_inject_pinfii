@@ -22,11 +22,13 @@ REG = []
 IP = []  			# 'Activate' in activate, short for instruction pointer ,used to match with assembly code
 
 def errorFile(desdir):		
-	fileDir=desdir+"error_output"
+	fileDir =desdir+ "error_output"
 	# get file names in this dir and return array
 	fileName_list = os.listdir(fileDir)
 	# change to string
-	fileName = str(fileName_list)	
+	if len(fileName_list) == 0:
+		return
+	fileName = str(fileName_list)
 	fileName = fileName.replace("errorfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
 	global errorFileIndexes, duePerSeg, duePercent
 	errorFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
@@ -235,6 +237,7 @@ def getFIplace(dir):
 			tmpstr = strs[-1]
 			ins_pointer=tmpstr[-7:-1]
 			ins_pointer = str(ins_pointer)
+			ins_pointer = str('0x'+ins_pointer)
 			reg = extract_strings(str(tmpstr))
 			#print reg
 			if "Memoryinjection" in line :
@@ -253,7 +256,7 @@ def getFIplace(dir):
 		if strs[0] == "Activated" and flag ==0:	# extra IP
 			tmpstr = strs[-1]
 			ins_pointer=tmpstr[-7:-1]
-			ins_pointer = str(ins_pointer)
+			ins_pointer = str('0x'+ins_pointer)
 			reg = extract_strings(str(tmpstr))
                         if "Memoryinjection" in line :
                                 ins_pointer = ''

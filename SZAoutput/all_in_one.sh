@@ -2,7 +2,7 @@
 # 1 args followed, args '1' represents using output_classification.py and '2' stands for csv_process.py
 # array is a queue in which you generate csv and xls
 
-array=( amg FFT miniFE backprop Kmeans lu needle HPCCG hpl bfs knn)
+array=( amg FFT miniFE backprop Kmeans lu needle HPCCG hpl bfs knn myocyte )
 #array=( lu )
 #fdname='/root/localTool/pin/source/tools/pinfii/example/SZAoutput'
 
