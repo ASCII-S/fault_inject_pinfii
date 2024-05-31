@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler
 filename = "perFiResult.csv"
 disassembly_filename = 'disassemblycode.txt'
 nowapp = sys.argv[2]
+tofilename = nowapp+'.csv'
 sdcapp = ['hpl']
 
 # Formulate csv and cut NoIP
@@ -107,7 +108,7 @@ def smooth_data(input_data, window_size=3):
 
 def math_column():
 	# do some math analysis
-	global data,DE,S_Masked,S_Crash,S_Sdc,S_MS,nowapp,sdcapp
+	global data,DE,S_Masked,S_Crash,S_Sdc,S_MS,nowapp,sdcapp,tofilename
 	
 	data['Masked'] = data['result_class'].map({'masked':1,'crash':0,'sdc':0})
         data['Crash'] = data['result_class'].map({'masked':0,'crash':1,'sdc':0})
@@ -137,7 +138,7 @@ def save_list():
 	else :
 		data=data.loc[:,['IP','REG','fi','seg','result_class','FUC','INS','INS_FULL','Masked','Crash','Dynamic Execution','Masked%','Crash%']]
 
-        data.to_csv('Format_Result.csv', mode='w', index=False)
+        data.to_csv(tofilename, mode='w', index=False)
 	
 
 if __name__ == '__main__':
