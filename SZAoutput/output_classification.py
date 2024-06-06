@@ -35,35 +35,35 @@ def errorFile(desdir):
 	# print errorFileIndexes
 
 def amg_progFile(desdir):
-        fileDir=desdir+"/prog_output"
+	fileDir=desdir+"/prog_output"
 	desline =  "FinalRelativeResidualNorm"
-        fileName_list = os.listdir(fileDir)
-        fileName = str(fileName_list)
-        fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
-        progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
 	
 	global errorFileIndexes, classFile,FRRN
 	
 	# remove errorfile output
-        for x in errorFileIndexes:
-                progFileIndexes.remove(x)  
+	for x in errorFileIndexes:
+		progFileIndexes.remove(x)  
 		classFile[x] = "crash"
 		#FRRN[x] = None
 	# print progFileIndexes
-        for x in progFileIndexes:
+	for x in progFileIndexes:
 		filePath=fileDir+"/outputfile-"+str(x)
-                # print filePath
-                with open(filePath,'r') as fp:
-                        lines = fp.readlines()
+		# print filePath
+		with open(filePath,'r') as fp:
+			lines = fp.readlines()
 		normStr = []
 		flag = False
 		for line in lines:	
 			line = str(line).replace(" ","")
-                	normStr = line.split('=')
-                	if normStr[0] == desline:
-                		flag = True
+			normStr = line.split('=')
+			if normStr[0] == desline:
+				flag = True
 				break
-                if flag is False:
+		if flag is False:
 			continue
 		if normStr[-1] == 'nan\n' or normStr[-1] == '-nan\n':
 			classFile[x] = "crash"
@@ -71,126 +71,169 @@ def amg_progFile(desdir):
 			continue
 			#print 'hi'
 		residnum = eval(normStr[-1])
-                userDef = 1e-6
-                if residnum > userDef:
+		userDef = 1e-6
+		if residnum > userDef:
 			classFile[x] = "sdc"
-                else:
+		else:
 			classFile[x] = "masked"
 		#FRRN[x] = residnum	#new here
 		
 
 def miniFE_progFile(desdir):
-        fileDir=desdir+"/prog_output"
-        fileName_list = os.listdir(fileDir)
-        fileName = str(fileName_list)
-        fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
-        progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+	fileDir=desdir+"/prog_output"
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
 	
 	global errorFileIndexes, classFileN
         
 	# remove errorfile output
-        for x in errorFileIndexes:
-                progFileIndexes.remove(x)
-                classFile[x] = 'crash'
-        # print progFileIndexes
+	for x in errorFileIndexes:
+		progFileIndexes.remove(x)
+		classFile[x] = 'crash'
+	# print progFileIndexes
 
-        lineNumber = 16
-        for x in progFileIndexes:
-                filePath=fileDir+"/outputfile-"+str(x)
-                #print filePath
+	lineNumber = 16
+	for x in progFileIndexes:
+		filePath=fileDir+"/outputfile-"+str(x)
+		#print filePath
 		#print x
-                with open(filePath,'r') as fp:
-                        lines = fp.readlines()
-                        resultline = lines[-1]
-                resultline = str(resultline).replace(" ","")
-                normStr = resultline.split(':')
-                #print normStr[-1]
-                if normStr[0] != "FinalResidNorm":
-                        continue
-                if normStr[-1] == "nan\n" or  normStr[-1] == "-nan\n":
-                        continue
-                residnum = eval(normStr[-1])
-                userDef = 1e-6
-                if residnum > userDef:
-                        classFile[x] = 'sdc'
-                else:
-                        classFile[x] = 'masked'
+		with open(filePath,'r') as fp:
+			lines = fp.readlines()
+			resultline = lines[-1]
+		resultline = str(resultline).replace(" ","")
+		normStr = resultline.split(':')
+		#print normStr[-1]
+		if normStr[0] != "FinalResidNorm":
+			continue
+		if normStr[-1] == "nan\n" or  normStr[-1] == "-nan\n":
+			continue
+		residnum = eval(normStr[-1])
+		userDef = 1e-6
+		if residnum > userDef:
+			classFile[x] = 'sdc'
+		else:
+			classFile[x] = 'masked'
 		#FRRN[x] = residunum
-        print "miniFE complete"
+	print('miniFE complete')
 
 # HPL
 def hpl_progFile(desdir):
-        fileDir=desdir+"/prog_output"
-        fileName_list = os.listdir(fileDir)
-        fileName = str(fileName_list)
-        fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
-        progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+	fileDir=desdir+"/prog_output"
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
 	
 	global errorFileIndexes, classFile
-        # remove errorfile output
-        for x in errorFileIndexes:
-                progFileIndexes.remove(x)
-                classFile[x] = "crash"
-        #print progFileIndexes
-        lineNumber = 53
-        for x in progFileIndexes:
-                filePath=fileDir+"/outputfile-"+str(x)
-                resultline = linecache.getline(filePath,lineNumber).strip()
-                if resultline.find("FAILED")>0:
-                        classFile[x]='sdc'
-                if resultline.find("PASSED")>0:
-                        classFile[x]='masked'
+	# remove errorfile output
+	for x in errorFileIndexes:
+		progFileIndexes.remove(x)
+		classFile[x] = "crash"
+	#print progFileIndexes
+	lineNumber = 53
+	for x in progFileIndexes:
+		filePath=fileDir+"/outputfile-"+str(x)
+		resultline = linecache.getline(filePath,lineNumber).strip()
+		if resultline.find("FAILED")>0:
+			classFile[x]='sdc'
+		if resultline.find("PASSED")>0:
+			classFile[x]='masked'
 
 #hpccg
 def hpccg_progFile(desdir):
-        fileDir=desdir+"/prog_output"
-        fileName_list = os.listdir(fileDir)
-        fileName = str(fileName_list)
-        fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
-        progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+	fileDir=desdir+"/prog_output"
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
 
 	global errorFileIndexes, classFile
 	# remove errorfile output
-        for x in errorFileIndexes:
-                progFileIndexes.remove(x)
-                classFile[x] = "crash"
-        # print progFileIndexes
-        lineNumber = 21
-        for x in progFileIndexes:
-                filePath=fileDir+"/outputfile-"+str(x)
-                with open(filePath,'r') as fp:
-                        lines = fp.readlines()
-                if len(lines) < lineNumber:
-                        continue
-                resultline = lines[lineNumber]
-                resultline = str(resultline).replace(" ","")
-                normStr = resultline.split(':')
-                if normStr[0] != "Finalresidual":
-                        continue
-                residnum = eval(normStr[-1])
-                userDef = 1e-6
-                if residnum > userDef:
-                        classFile[x] = "sdc"
-                else:
-                        classFile[x] = "masked"
+	for x in errorFileIndexes:
+		progFileIndexes.remove(x)
+		classFile[x] = "crash"
+	# print progFileIndexes
+	lineNumber = 21
+	for x in progFileIndexes:
+		filePath=fileDir+"/outputfile-"+str(x)
+		with open(filePath,'r') as fp:
+			lines = fp.readlines()
+		if len(lines) < lineNumber:
+			continue
+		resultline = lines[lineNumber]
+		resultline = str(resultline).replace(" ","")
+		normStr = resultline.split(':')
+		if normStr[0] != "Finalresidual":
+			continue
+		residnum = eval(normStr[-1])
+		userDef = 1e-6
+		if residnum > userDef:
+			classFile[x] = "sdc"
+		else:
+			classFile[x] = "masked"
+
+def xsbench_progFile(desdir):
+	print("xsbench_progFile start!")
+	fileDir=desdir+"/prog_output"
+	errDir = desdir + "/error_output"
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+
+	global errorFileIndexes, classFile
+
+	# remove errorfile output
+	for x in errorFileIndexes:
+		# error file path
+		errfile_name = "errorfile-" + str(x)
+		file_path = os.path.join(errDir,errfile_name)  
+
+		try:
+			with open(file_path, 'r') as file:
+				first_line = file.readline().replace("\n",'')
+				return_code = first_line.split(" ")[-1]
+				#if '1' in return_code and '3' not in return_code:
+				if return_code == '1':
+					#print("erroroutput-{}: return code {}\t\tsdc".format(x,return_code))
+					classFile[x] = 'sdc'
+				else:
+					#print("erroroutput-{}: return code {}".format(x,return_code))
+					classFile[x] = 'crash'
+		except FileNotFoundError:
+			print('file {} not exist'.format(file_path))
+		except Exception as e:
+			print('open error: {}'.format(e))
+		
+		progFileIndexes.remove(x)
+		
+	# print classFile
+	# print progFileIndexes
+	for x in progFileIndexes:
+		classFile[x] = 'masked'
+	# print classFile
+
+
 
 def progFile(desdir):
 	fileDir=desdir+"/prog_output"
-        fileName_list = os.listdir(fileDir)
-        fileName = str(fileName_list)
-        fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
-        progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
+	fileName_list = os.listdir(fileDir)
+	fileName = str(fileName_list)
+	fileName = fileName.replace("outputfile-","").replace(" ","").replace("'","").replace("[","").replace("]","")
+	progFileIndexes = list(int(char) for char in fileName.split(","))  # change string to int array
 			
 	global errorFileIndexes, classFile
         
 	# remove errorfile output
-        for x in errorFileIndexes:
-                progFileIndexes.remove(x)
-                classFile[x] = 'crash'
-        # print classFile
+	for x in errorFileIndexes:
+		progFileIndexes.remove(x)
+		classFile[x] = 'crash'
+	# print classFile
 	# print progFileIndexes
 	for x in progFileIndexes:
-                classFile[x] = 'masked'
+		classFile[x] = 'masked'
 	# print classFile
 	
 def extract_strings(input_string):
@@ -221,10 +264,10 @@ def getFIplace(dir):
 		if "latency" in line  :
 			continue
 		if strs[0] == "fiindex" and flag == 1 : # new inner cycle comes but can not find IP,attention ! this flag is an old flag of last loop
-                        segs.append(int(strs[-1]))
+			segs.append(int(strs[-1]))
 			IP.append('NoIP')
 			#print('empty in:',segs[-2])
-                        flag = 1 # a inner cycle start
+			flag = 1 # a inner cycle start
 			continue
 		if strs[0] == "fiindex" and flag == 0 : # last inner cycle have a proper IP(flag =0)
 			segs.append(int(strs[-1]))
@@ -246,21 +289,21 @@ def getFIplace(dir):
 			
 			IP.append(str(ins_pointer))
 			REG.append(str(reg))
-                        count=count+1
+			count=count+1
 			
 #			print('percent: {:.0%}'.format(count/float(15000))))
 			
 
-                        flag = 0        #inner cycle end with an IP
+			flag = 0        #inner cycle end with an IP
 			continue
 		if strs[0] == "Activated" and flag ==0:	# extra IP
 			tmpstr = strs[-1]
 			ins_pointer=tmpstr[-7:-1]
 			ins_pointer = str('0x'+ins_pointer)
 			reg = extract_strings(str(tmpstr))
-                        if "Memoryinjection" in line :
-                                ins_pointer = ''
-                                #print("Memor`yinjection")
+			if "Memoryinjection" in line :
+				ins_pointer = ''
+				#print("Memor`yinjection")
 			IP.append(str(ins_pointer))
 			REG.append(str(reg))
 
@@ -287,7 +330,7 @@ def saveResults(desdir):
 	global segs,injectPlaces,classFile,REG
 	df_per_fi_result["seg"] = segs
 	df_per_fi_result["fi"] = injectPlaces
-        df_per_fi_result["result_class"] = classFile
+	df_per_fi_result["result_class"] = classFile
 	#df_per_fi_result["residual_Num"] = FRRN
 	df_per_fi_result["IP"] = IP
 	df_per_fi_result["REG"] = REG
@@ -310,14 +353,21 @@ def choose_progFile(app_folder):
 	elif "amg" in app_name:
 		amg_progFile(app_folder)
 	elif "miniFE" in app_name:
-                miniFE_progFile(app_folder)
+		miniFE_progFile(app_folder)
 	elif "hpccg" in app_name:
-                hpccg_progFile(app_folder)
+		hpccg_progFile(app_folder)
+	elif "xsbench" in app_name:
+		xsbench_progFile(app_folder)
 	else :
 		progFile(app_folder)
-	print app_name,'in',app_folder
+	print (app_name,'in',app_folder)
 
 if __name__ == '__main__':
+	if len(sys.argv) < 2 :
+		print("please enter right arguments:app_path('./' for recommend),app_name")
+		sys.exit()
+	desdir = sys.argv[1]
+	appname = sys.argv[2]
 	errorFile(sys.argv[1])	
 	choose_progFile(sys.argv[1])# before _proFile can be | amg_ | miniFE_ | hpccg_ | hpl_ |
 	getFIplace(sys.argv[1])
