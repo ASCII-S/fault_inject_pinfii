@@ -152,7 +152,7 @@ VOID inject_CCS(VOID *ip, UINT32 reg_num, CONTEXT *ctxt){
 		int isvalid = 0;
 		if(REG_valid(reg)){
 			isvalid = 1;
-//PRINT_MESSAGE(4, ("Executing: Valid Reg name %s\n", REG_StringShort(reg).c_str()));
+	//PRINT_MESSAGE(4, ("Executing: Valid Reg name %s\n", REG_StringShort(reg).c_str()));
 
 			if(reg_map.isFloatReg(reg_num)) {
 				//PRINT_MESSAGE(4, ("Executing: Float Reg name %s\n", REG_StringShort(reg).c_str()));
@@ -331,7 +331,7 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
 	// decides where to insert the injection calls and what calls to inject
   if (!isValidInst(ins))
     return;
-////////////////////////////////////lixiang//////////////////////////////////////
+	////////////////////////////////////lixiang//////////////////////////////////////
      //   if (latency > 0 && latency < LETENCYWIN){
      //           activationFile = fopen(fi_activation_file.Value().c_str(), "a");
      //           fprintf(activationFile, "latency:%lu ins:%s ip:%p \n", latency, INS_Disassemble(ins).c_str(),(void*)INS_Address(ins));
@@ -343,7 +343,7 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
 
 
 
-////////////////////////////////////lixiang///////////////////
+	////////////////////////////////////lixiang///////////////////
 	int numW = INS_MaxNumWRegs(ins), randW = 0;
 	UINT32 index = 0;
 	REG reg;
