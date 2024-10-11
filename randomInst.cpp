@@ -20,12 +20,15 @@ using namespace std;
 
 KNOB<UINT64> randInst(KNOB_MODE_WRITEONCE, "pintool",
                       "randinst","0", "random instructions");
+KNOB<UINT64> FileNameSeq(KNOB_MODE_WRITEONCE, "pintool",
+                      "FileNameSeq","0", "random instructions");
 
 static UINT64 allinst = 0 ;
 static UINT32 find_flag = 0;
 
 
-#define Target_Opecode "JNE"
+
+#define Target_Opecode "MOV"
 /*
 static UINT64 start_dec_adr =   4198496;
 static UINT64 end_dec_adr =     4314860;
@@ -39,57 +42,80 @@ VOID docount0() { allinst++; }
 //ip是每次遇到的指令,regname是在指令ins中随机找到的寄存器名称,mflag表示寄存器的状态
 VOID docount(VOID *ip, VOID *reg_name,UINT32 mflag,INS ins) {
     allinst++;
-    OPCODE opcode = INS_Opcode(ins);
-    std::string opcodeStr = OPCODE_StringShort(opcode);
-
-    //if (randInst.Value() <= allinst && find_flag ==0) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
-    if (randInst.Value() <= allinst) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
+    
+    /*if (opcodeStr == Target_Opecode) //调试预期的操作码
+            {
+                ADDRINT pc = INS_Address(ins);
+                cout << "allinst:\t" <<  allinst << endl;
+                cout << "Inj ope:\t" << opcodeStr.c_str() << "\tInj ins:\t" <<  INS_Disassemble(ins)<<endl;
+                // 打印 PC 值
+                std::cout << "PC of target opcode: " << std::hex << pc << std::dec << std::endl;
+                }
+    */
+    //if (randInst.Value() = allinst && find_flag ==0) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
+    if (randInst.Value() == allinst) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
         
-        //if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr) && opcodeStr == Target_Opecode)  //符合预期的ip值
-        if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr))
-        {
-        /*
-        cout << "\ndocount in:" << endl;
-        cout << "randInst:" << randInst.Value() << endl;
-        cout << "actual Inst:" << allinst << endl;
-        cout << "pc:\t" << std::hex << ip << dec << endl;
-        cout << "Find hexpc:\t" << std::dec << ip << dec << endl;
-        */
-        std::ofstream logfile;
-        logfile.open("randomInst_log", std::ios_base::app);  // 追加模式打开文件
-
-        if (logfile.is_open()) {
-            logfile << "\ndocount in:"<<"\n";
-            logfile << "randInst: " << randInst.Value() << "\n";
-            logfile << "actual Inst: " << allinst << "\n";
-            logfile << "Opecode:\t" << opcodeStr  << "\n";
-            logfile << "Find hexpc:\t" << std::dec << ip << std::dec << "\n";
+        //if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr))  //符合预期的ip值,不要尝试筛选出操作码!!!ip值和汇编代码中不匹配!!!
+        //if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr))
+            {
+                
             
-            logfile.close();
-        } else {
-            std::cerr << "Unable to open randomInst_log file." << std::endl;
+            
+            //调试信息
+            if (0)
+            {
+            OPCODE opcode = INS_Opcode(ins);
+            std::string opcodeStr = OPCODE_StringShort(opcode);
+            std::ofstream logfile;
+            logfile.open("pintool_mylog", std::ios_base::app);  // 追加模式打开文件
+            if (logfile.is_open()) {
+                logfile << "\n\nrandominst content:"<<"\n";
+                logfile << "randInst: " << randInst.Value() << "\n";
+                logfile << "actual Inst: " << allinst << "\n";
+                
+                logfile << "Inj ope:\t" << opcodeStr.c_str() << "\tInj ins:\t" <<  INS_Disassemble(ins)<<"\n";
+                logfile << "Opecode:\t" << opcodeStr  << "\n";
+                logfile << "Find hexpc:\t" << std::dec << ip << std::dec << "\n";
+                
+                logfile.close();
+            } else {
+                std::cerr << "Unable to open randomInst_log file." << std::endl;
+            }
+            }
+            
+            if(find_flag ==0) //保护不被重复写入
+            {
+            ofstream OutFile;
+            // 使用 stringstream 拼接字符串
+            string filename = "instruction";
+            if (FileNameSeq.Value() != 0) {
+                stringstream ss;
+                ss << filename << FileNameSeq.Value();
+                filename = ss.str();
+            }
+            OutFile.open(filename.c_str());
+            if (mflag == 1){
+                OutFile << "mem:"<<(const char *)reg_name << endl;
+            }
+            if (mflag == 0){
+                OutFile << "reg:"<<(const char*)reg_name << endl;
+            }
+            if (static_cast<int>(mflag) == -1){
+                OutFile << (const char*)reg_name << endl;
+            }
+            OutFile << "pc:"<<(unsigned long)ip << endl;
+            OutFile.close();
+            //cout << "done!" << endl;
+            find_flag = 1;//找到合适的值了
+            }
         }
-        
-        ofstream OutFile;
-        OutFile.open("instruction");
-        if (mflag == 1){
-            OutFile << "mem:"<<(const char *)reg_name << endl;
-        }
-        if (mflag == 0){
-            OutFile << "reg:"<<(const char*)reg_name << endl;
-        }
-        if (static_cast<int>(mflag) == -1){
-            OutFile << (const char*)reg_name << endl;
-        }
-        OutFile << "pc:"<<(unsigned long)ip << endl;
-        OutFile.close();
+        /*else{
+            return;
+            //exit(0);
+    }*/
 
-        find_flag = 1;
-        }
-        /*
-        else{
-            find_flag = 0;
-        }*/
+        
+
     }
 }
 
@@ -101,7 +127,6 @@ VOID MyCallback(ADDRINT addr) {
 
 VOID PrintOpcode(INS ins) {
     // 获取指令的操作码
-    allinst++;
     OPCODE opcode = INS_Opcode(ins);
     std::string opcodeStr = OPCODE_StringShort(opcode);
 
@@ -115,35 +140,25 @@ VOID CountInst(INS ins, VOID *v)
     //allinst++;
     //cout << "Current is" << allinst << endl;
 
-        int mflag = 0;
-        REG reg;
-        const char * reg_name = NULL;
-
-        
-        // 获取操作码
-        OPCODE opcode = INS_Opcode(ins);
-        std::string opcodeStr = OPCODE_StringShort(opcode);
-        //const char *target_ope = Target_Opecode;
 
         /*
         std::cout << "\n\nFound JNE instruction: " << opcodeStr << std::endl;  // 如果前几项字符匹配
         // 使用 strncmp 比较 opcodeStr 的前 target_len 个字符
         cout << "Inj ope:\t" << opcodeStr.c_str() << "\tInj ins:\t" <<  INS_Disassemble(ins)<<endl;
-        cout << "Target ope:\t" << target_ope << endl;
+        //cout << "Target ope:\t" << target_ope << endl;
         cout << "Now Inst:\t" << allinst << endl;
         */
 
 
-//------------------------------------------------------全局if,尝试判断合适的操作码,但其hexoc值不一定合法-------------------------------------------------------//
+//------------------------------------------------------对静态代码的操作,动态代码操作逻辑在回调函数中-------------------------------------------------------//
         //allinst++;
 
         
-        //if (opcodeStr == target_ope && find_flag ==0 && randInst.Value() <= allinst) { //只考虑目标操作码,考虑第一次命中,从随机数开始考虑;没遇到对的指令,就继续走
-        
-
-        
-
-
+           
+        {
+        int mflag = 0;
+        REG reg;
+        const char * reg_name = NULL;
         if (INS_IsMemoryWrite(ins) || INS_IsMemoryRead(ins)) {//内存读写指令
             REG reg = INS_MemoryBaseReg(ins);//获取当前指令的内存基址寄存器
             string *temp = new string(REG_StringShort(reg));
@@ -194,7 +209,8 @@ VOID CountInst(INS ins, VOID *v)
 
         INS_InsertCall(ins,IPOINT_BEFORE,(AFUNPTR)docount,IARG_INST_PTR,IARG_PTR,reg_name,IARG_UINT32,mflag,IARG_ADDRINT, IARG_INST_PTR,IARG_END);
 
-        /*}
+        } 
+        /*
         else{
             //INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)MyCallback, IARG_ADDRINT, INS_Address(ins),IARG_END);
             //INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)PrintOpcode, IARG_INST_PTR, IARG_END);
@@ -228,7 +244,13 @@ VOID Fini(INT32 code, VOID *v)
         //cout << "find flag ==0" << endl;
         cout << "allInst:\t" << allinst << endl;
         ofstream OutFile;
-        OutFile.open("instruction");
+        string filename = "instruction";
+        if (FileNameSeq.Value() != 0) {
+            stringstream ss;
+            ss << filename << FileNameSeq.Value();
+            filename = ss.str();
+        }
+        OutFile.open(filename.c_str());
         OutFile << "pc:0" << endl;
         OutFile.close();
     }
