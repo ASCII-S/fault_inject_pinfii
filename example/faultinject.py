@@ -117,14 +117,14 @@ def set_prog():
                 progbin = "/home/tongshiyu/programs/rodinia-master/openmp/backprop/backprop"
                 optionlist = ['65536']
         elif progname == "Kmeans":                              ## Kmeans
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/kmeans/kmeans"
-                datafile = "/home/tongsy/programs/rodinia-master/data/kmeans/inputGen/1000_34.txt"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/kmeans/kmeans"
+                datafile = "/home/tongshiyu/programs/rodinia-master/data/kmeans/inputGen/1000_34.txt"
                 optionlist = ['-i', datafile]
         elif progname == "lu":                                  ## LU
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/lud/lud"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/lud/lud"
                 optionlist = ['-s512']  
         elif progname == "needle":                              ## Needle
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/nw/needle"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/nw/needle"
                 optionlist = ['2048', '10', '2']
         elif progname == "HPCCG":                               ## HPCCG
                 progbin = "/root/localTool/HPL/HPCCG-master/test_HPCCG"
@@ -136,7 +136,7 @@ def set_prog():
                 datafile = "/home/tongshiyu/programs/rodinia-master/data/bfs/inputGen/graph64k.txt"
                 optionlist = [datafile]
         elif progname == "knn":                                 ## KNN
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/nn/nn"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/nn/nn"
                 datafile = "./filelist.txt"
                 optionlist = [datafile, '5', '30', '90']
         elif progname == "myocyte":                             
@@ -146,30 +146,30 @@ def set_prog():
                 progbin = "/home/tongshiyu/programs/rodinia-master/openmp/srad_v1/srad"
                 optionlist = ['15', '0.5', '285', '250', '1']
         elif progname == "lavaMD":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/lavaMD/lavaMD"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/lavaMD/lavaMD"
                 optionlist = ['-boxes1d', '5']
         elif progname == "heartwall":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/heartwall/heartwall"
-                optionlist = ["/home/tongsy/programs/rodinia-master/data/heartwall/test.avi.part00",'20']
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/heartwall/heartwall"
+                optionlist = ["/home/tongshiyu/programs/rodinia-master/data/heartwall/test.avi.part00",'20']
         elif progname == "pathfinder":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/pathfinder/pathfinder"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/pathfinder/pathfinder"
                 optionlist = ["1000",'10']
         elif progname == "b+tree":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/b+tree/b+tree"
-                optionlist = ['file', '/home/tongsy/programs/rodinia-master/data/b+tree/mil.txt', 'command', '/home/tongsy/programs/rodinia-master/data/b+tree/command.txt']
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/b+tree/b+tree"
+                optionlist = ['file', '/home/tongshiyu/programs/rodinia-master/data/b+tree/mil.txt', 'command', '/home/tongshiyu/programs/rodinia-master/data/b+tree/command.txt']
         elif progname == "hotspot":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/hotspot/hotspot"
-                optionlist = ['64','64','2','1',"/home/tongsy/programs/rodinia-master/data/hotspot/temp_64",'/home/tongsy/programs/rodinia-master/data/hotspot/power_64', './hotspot/outfile']
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/hotspot/hotspot"
+                optionlist = ['64','64','2','1',"/home/tongshiyu/programs/rodinia-master/data/hotspot/temp_64",'/home/tongshiyu/programs/rodinia-master/data/hotspot/power_64', './hotspot/outfile']
         elif progname == "leukocyte":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/leukocyte/leukocyte"
-                optionlist = ['5', '4', "/home/tongsy/programs/rodinia-master/data/leukocyte/testfile.avi"]
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/leukocyte/leukocyte"
+                optionlist = ['5', '4', "/home/tongshiyu/programs/rodinia-master/data/leukocyte/testfile.avi"]
         elif progname == "particlefilter":
-                progbin = "/home/tongsy/programs/rodinia-master/openmp/particlefilter/particle_filter"
+                progbin = "/home/tongshiyu/programs/rodinia-master/openmp/particlefilter/particle_filter"
                 optionlist = ['-x', '64', '-y', '64', '-z', '10', '-np', '1000']
         elif progname == "miniMD":
-                progbin = "/home/tongsy/programs/mantevo/miniMD/ref/miniMD_openmpi"
+                progbin = "/home/tongshiyu/programs/mantevo/miniMD/ref/miniMD_openmpi"
         elif progname == "miniAMR":
-                progbin = "/home/tongsy/programs/mantevo/miniAMR/ref/miniAMR.x"
+                progbin = "/home/tongshiyu/programs/mantevo/miniAMR/ref/miniAMR.x"
                 optionlist = ['--num_refine', '4', '--max_blocks', '2000', '--nx', '2', '--ny', '2', '--nz', '2']
         elif progname == "XSBench":
                 progbin = "/home/tongshiyu/programs/ANL/XSBench/openmp-threading/XSBench"
