@@ -1,7 +1,0 @@
-
-docount in:
-randInst: 0
-actual Inst: 628491
-Inj ope:	CLD	Inj ins:	cld 
-Opecode:	CLD
-Find hexpc:	0x0000000000401b00
