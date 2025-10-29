@@ -1,0 +1,72 @@
+
+
+randominst content:
+randInst: 1
+actual Inst: 222648
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x0000000000402790
+
+
+randominst content:
+randInst: 1
+actual Inst: 222648
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x0000000000402790
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f712b4eba5a
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f1e2e2a3a5a
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f9fb8369a5a
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f9caeea8a5a
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007fb076673a5a
+
+
+randominst content:
+randInst: 123
+actual Inst: 123
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f8de6026a5a
+
+
+randominst content:
+randInst: 1234
+actual Inst: 1234
+Inj ope:	CLD	Inj ins:	cld 
+Opecode:	CLD
+Find hexpc:	0x00007f2475343572

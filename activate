@@ -1,0 +1,83 @@
+fi index:1
+fi index:6
+fi inject instance:204249
+Activated: Valid Reg name rax in 0x406929
+inject place during execution 204249
+fi index:31
+fi inject instance:48
+Activated: Valid Reg name rdi in 0x40060e
+inject place during execution 48
+fi index:31
+fi inject instance:93
+Activated: Valid Reg name rdi in 0x40060e
+inject place during execution 93
+fi index:31
+fi inject instance:52
+Activated: Valid Reg name rax in 0x400600
+inject place during execution 52
+fi index:31
+fi inject instance:97
+Activated: Valid Reg name rax in 0x400600
+inject place during execution 97
+fi index:31
+fi inject instance:11
+Activated: Valid Reg name rbp in 0x400597
+inject place during execution 11
+fi index:31
+fi inject instance:2
+Activated: Valid Reg name rsi in 0x402c16
+inject place during execution 2
+fi index:30
+fi inject instance:83
+Activated: Valid Reg name rax in 0x405bfc
+inject place during execution 83
+fi index:30
+fi inject instance:2
+Activated: Valid Reg name rsi in 0x402c16
+inject place during execution 2
+fi index:30
+fi inject instance:84
+Activated: Valid Reg name rax in 0x405c06
+inject place during execution 84
+fi index:30
+fi inject instance:54
+Activated: Valid Reg name rsp in 0x41b8f6
+inject place during execution 54
+fi index:30
+fi inject instance:20
+Activated: Valid Reg name rdx in 0x4059c3
+inject place during execution 20
+fi index:30
+fi inject instance:27
+Activated: Valid Reg name rsi in 0x41a55a
+inject place during execution 27
+fi index:30
+fi inject instance:54
+Activated: Valid Reg name rbp in 0x41b8f6
+inject place during execution 54
+fi index:30
+fi inject instance:34
+Activated: Valid Reg name rax in 0x400e5c
+inject place during execution 34
+fi index:30
+fi inject instance:3
+Activated: Valid Reg name rsi in 0x400b4d
+inject place during execution 3
+fi index:30
+fi inject instance:37
+Activated: Valid Reg name rax in 0x400e66
+inject place during execution 37
+fi index:30
+fi inject instance:65
+EXECUTING flag reg: Original Reg name rflags value 0x202
+EXECUTING flag reg: Changed Reg name rflags value 0x242
+Activated: Valid Reg name rflags in 0x400e9c
+inject place during execution 65
+fi index:30
+fi inject instance:54
+Activated: Valid Reg name rsp in 0x401198
+inject place during execution 54
+fi index:30
+fi inject instance:69
+Activated: Valid Reg name rdx in 0x400ec4
+inject place during execution 69

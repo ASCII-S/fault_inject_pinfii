@@ -53,14 +53,15 @@ VOID docount(VOID *ip, VOID *reg_name,UINT32 mflag,INS ins) {
                 }
     */
     //if (randInst.Value() = allinst && find_flag ==0) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
-    if (randInst.Value() == allinst) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
-        
+    //if (randInst.Value() == allinst) {   //遇到参数中给定的随机数时执行下文;在randInst之后开始找第一个期望的操作码
+    if (randInst.Value() >= allinst && randInst.Value() <= allinst+0) {    
         //if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr))  //符合预期的ip值,不要尝试筛选出操作码!!!ip值和汇编代码中不匹配!!!
         //if (((unsigned long)ip > start_dec_adr) && ((unsigned long)ip < end_dec_adr))
             {
-                
-            
-            
+            cout << "randnum:\t"<< std::dec<< allinst <<"\t"
+                 << "hexpc:\t" << std::hex << ip << std::dec
+                 << endl;
+
             //调试信息
             if (0)
             {
@@ -117,21 +118,6 @@ VOID docount(VOID *ip, VOID *reg_name,UINT32 mflag,INS ins) {
         
 
     }
-}
-
-VOID MyCallback(ADDRINT addr) {
-    if (((unsigned long)addr > start_dec_adr) && ((unsigned long)addr < end_dec_adr)){
-    std::cout << "指令地址: " << std::hex << addr << std::endl;
-    }
-}
-
-VOID PrintOpcode(INS ins) {
-    // 获取指令的操作码
-    OPCODE opcode = INS_Opcode(ins);
-    std::string opcodeStr = OPCODE_StringShort(opcode);
-
-    // 打印操作码
-    std::cout << "Opcode: " << opcodeStr << std::endl;
 }
 
 // Pin calls this function every time a new instruction is encountered
@@ -206,10 +192,14 @@ VOID CountInst(INS ins, VOID *v)
         //if (INS_Valid(INS_Next(ins)))
         //    OutFile<<"next:"<<INS_Address(INS_Next(ins)) << endl;
         //OutFile.close();
-
-        INS_InsertCall(ins,IPOINT_BEFORE,(AFUNPTR)docount,IARG_INST_PTR,IARG_PTR,reg_name,IARG_UINT32,mflag,IARG_ADDRINT, IARG_INST_PTR,IARG_END);
-
-        } 
+        
+        INS_InsertCall(ins,IPOINT_BEFORE,(AFUNPTR)docount,
+                        IARG_INST_PTR,
+                        IARG_PTR,reg_name,
+                        IARG_UINT32,mflag,
+                        IARG_ADDRINT, INS_Address(ins),
+                        IARG_END);
+        }
         /*
         else{
             //INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)MyCallback, IARG_ADDRINT, INS_Address(ins),IARG_END);

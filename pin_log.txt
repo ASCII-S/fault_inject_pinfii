@@ -1,0 +1,1716 @@
+Pin: pin-3.13-98189-60a6ef199
+Copyright 2002-2019 Intel Corporation.
+ Invalid RTN mov rdx, qword ptr [rip+0x3343e9]
+ Invalid RTN lea rax, ptr [rip+0xbaff2]
+ Invalid RTN test dword ptr [rdx+0xb8], 0x40
+ Invalid RTN jnz 0x7ff50f2b6ad3
+ Invalid RTN test dword ptr [rdx+0xb8], 0x200
+ Invalid RTN jnz 0x7ff50f2b6ab9
+ Invalid RTN lea rax, ptr [rip+0xb70c3]
+ Invalid RTN test dword ptr [rdx+0x80], 0x100000
+ Invalid RTN jnz 0x7ff50f2b6ad3
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0xd0301]
+ Invalid RTN sub rsp, 0x28
+ Invalid RTN lea rcx, ptr [rip+0xd02fb]
+ Invalid RTN mov dword ptr [rsp+0xc], 0x1
+ Invalid RTN mov dword ptr [rsp+0x8], 0x3ae75f6
+ Invalid RTN mov edx, 0x5f
+ Invalid RTN mov qword ptr [rsp], rax
+ Invalid RTN mov eax, 0x50e3a8
+ Invalid RTN shl rax, 0x4
+ Invalid RTN add rcx, 0x1
+ Invalid RTN add rax, rdx
+ Invalid RTN mov rdx, rax
+ Invalid RTN and edx, 0xf0000000
+ Invalid RTN shr rdx, 0x18
+ Invalid RTN xor rax, rdx
+ Invalid RTN movzx edx, byte ptr [rcx]
+ Invalid RTN test dl, dl
+ Invalid RTN jnz 0x7ff50f2e3430
+ Invalid RTN and eax, 0xfffffff
+ Invalid RTN cmp rax, 0x3ae75f6
+ Invalid RTN jnz 0x7ff50f2e348a
+ Invalid RTN lea rdi, ptr [rip+0xd1dc0]
+ Invalid RTN mov rsi, rsp
+ Invalid RTN mov qword ptr [rsp+0x10], 0x0
+ Invalid RTN call 0x7ff50f36ae80
+ Invalid RTN shl rax, 0x4
+ Invalid RTN add rcx, 0x1
+ Invalid RTN add rax, rdx
+ Invalid RTN mov rdx, rax
+ Invalid RTN and edx, 0xf0000000
+ Invalid RTN shr rdx, 0x18
+ Invalid RTN xor rax, rdx
+ Invalid RTN movzx edx, byte ptr [rcx]
+ Invalid RTN test dl, dl
+ Invalid RTN jnz 0x7ff50f2e3430
+ Invalid RTN and eax, 0xfffffff
+ Invalid RTN cmp rax, 0x3ae75f6
+ Invalid RTN jnz 0x7ff50f2e348a
+ Invalid RTN lea rdi, ptr [rip+0xd1dc0]
+ Invalid RTN mov rsi, rsp
+ Invalid RTN mov qword ptr [rsp+0x10], 0x0
+ Invalid RTN call 0x7ff50f36ae80
+ Invalid RTN mov r10, qword ptr [rip+0x27ffe9]
+ Invalid RTN mov rax, qword ptr [r10+0x108]
+ Invalid RTN test rax, rax
+ Invalid RTN jz 0x7ff50f36af18
+ Invalid RTN sub rsp, 0x38
+ Invalid RTN mov r8, rsi
+ Invalid RTN lea rcx, ptr [rax+0x388]
+ Invalid RTN lea rdx, ptr [rsp+0x10]
+ Invalid RTN mov qword ptr [rsp+0x10], 0x0
+ Invalid RTN mov qword ptr [rsp+0x18], 0x0
+ Invalid RTN mov qword ptr [rsp+0x20], 0x0
+ Invalid RTN mov byte ptr [rsp+0x14], 0x20
+ Invalid RTN xor r9d, r9d
+ Invalid RTN mov qword ptr [rsp+0x8], rdx
+ Invalid RTN mov rsi, rax
+ Invalid RTN lea rdx, ptr [rsp+0x8]
+ Invalid RTN push 0x0
+ Invalid RTN push 0x0
+ Invalid RTN call qword ptr [r10+0x138]
+ Invalid RTN mov rdx, qword ptr [rsp+0x18]
+ Invalid RTN pop rcx
+ Invalid RTN pop rsi
+ Invalid RTN test rdx, rdx
+ Invalid RTN jz 0x7ff50f36af08
+ Invalid RTN test rax, rax
+ Invalid RTN jz 0x7ff50f36af10
+ Invalid RTN mov rax, qword ptr [rax]
+ Invalid RTN add rax, qword ptr [rdx+0x8]
+ Invalid RTN add rsp, 0x38
+ Invalid RTN ret 
+ Invalid RTN lea rdx, ptr [rip-0x8e]
+ Invalid RTN test rax, rax
+ Invalid RTN cmovz rax, rdx
+ Invalid RTN add rsp, 0x28
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x338b69]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x100000
+ Invalid RTN jz 0x7ff50f2b2321
+ Invalid RTN lea rax, ptr [rip+0xbf3cf]
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x3320f9]
+ Invalid RTN lea rax, ptr [rip+0xba372]
+ Invalid RTN test dword ptr [rdx+0xb8], 0x40
+ Invalid RTN jnz 0x7ff50f2b8dc3
+ Invalid RTN test dword ptr [rdx+0xb8], 0x200
+ Invalid RTN jnz 0x7ff50f2b8da9
+ Invalid RTN lea rax, ptr [rip+0xb6983]
+ Invalid RTN test dword ptr [rdx+0x80], 0x100000
+ Invalid RTN jnz 0x7ff50f2b8dc3
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x3366f9]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x100000
+ Invalid RTN jz 0x7ff50f2b4791
+ Invalid RTN lea rax, ptr [rip+0xbd09f]
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x336369]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x100000
+ Invalid RTN jz 0x7ff50f2b4b21
+ Invalid RTN lea rax, ptr [rip+0xbce3f]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0xd0221]
+ Invalid RTN sub rsp, 0x28
+ Invalid RTN lea rcx, ptr [rip+0xd021b]
+ Invalid RTN mov dword ptr [rsp+0xc], 0x1
+ Invalid RTN mov dword ptr [rsp+0x8], 0x3ae75f6
+ Invalid RTN mov edx, 0x5f
+ Invalid RTN mov qword ptr [rsp], rax
+ Invalid RTN mov eax, 0x50e3a8
+ Invalid RTN shl rax, 0x4
+ Invalid RTN add rcx, 0x1
+ Invalid RTN add rax, rdx
+ Invalid RTN mov rdx, rax
+ Invalid RTN and edx, 0xf0000000
+ Invalid RTN shr rdx, 0x18
+ Invalid RTN xor rax, rdx
+ Invalid RTN movzx edx, byte ptr [rcx]
+ Invalid RTN test dl, dl
+ Invalid RTN jnz 0x7ff50f2e3510
+ Invalid RTN and eax, 0xfffffff
+ Invalid RTN cmp rax, 0x3ae75f6
+ Invalid RTN jnz 0x7ff50f2e356a
+ Invalid RTN lea rdi, ptr [rip+0xd1cec]
+ Invalid RTN mov rsi, rsp
+ Invalid RTN mov qword ptr [rsp+0x10], 0x0
+ Invalid RTN call 0x7ff50f36ae80
+ Invalid RTN shl rax, 0x4
+ Invalid RTN add rcx, 0x1
+ Invalid RTN add rax, rdx
+ Invalid RTN mov rdx, rax
+ Invalid RTN and edx, 0xf0000000
+ Invalid RTN shr rdx, 0x18
+ Invalid RTN xor rax, rdx
+ Invalid RTN movzx edx, byte ptr [rcx]
+ Invalid RTN test dl, dl
+ Invalid RTN jnz 0x7ff50f2e3510
+ Invalid RTN and eax, 0xfffffff
+ Invalid RTN cmp rax, 0x3ae75f6
+ Invalid RTN jnz 0x7ff50f2e356a
+ Invalid RTN lea rdi, ptr [rip+0xd1cec]
+ Invalid RTN mov rsi, rsp
+ Invalid RTN mov qword ptr [rsp+0x10], 0x0
+ Invalid RTN call 0x7ff50f36ae80
+ Invalid RTN lea rdx, ptr [rip-0xae]
+ Invalid RTN test rax, rax
+ Invalid RTN cmovz rax, rdx
+ Invalid RTN add rsp, 0x28
+ Invalid RTN ret 
+ Invalid RTN mov rcx, qword ptr [rip+0x334c9e]
+ Invalid RTN lea rax, ptr [rip+0x11797]
+ Invalid RTN mov edx, dword ptr [rcx+0xb8]
+ Invalid RTN mov esi, edx
+ Invalid RTN and esi, 0x21000
+ Invalid RTN cmp esi, 0x21000
+ Invalid RTN jz 0x7ff50f2b6220
+ Invalid RTN test dh, 0x8
+ Invalid RTN lea rax, ptr [rip+0xbe8b7]
+ Invalid RTN jnz 0x7ff50f2b6220
+ Invalid RTN test byte ptr [rcx+0x81], 0x2
+ Invalid RTN lea rax, ptr [rip-0x199]
+ Invalid RTN jz 0x7ff50f2b6220
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2fb2a9]
+ Invalid RTN mov eax, dword ptr [rax+0xb8]
+ Invalid RTN test ah, 0x1
+ Invalid RTN jnz 0x7ff50fa5cd40
+ Invalid RTN test al, 0x40
+ Invalid RTN jnz 0x7ff50fa5cd30
+ Invalid RTN lea rax, ptr [rip-0x5cd]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0x57e89]
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2ec5d9]
+ Invalid RTN mov eax, dword ptr [rax+0xb8]
+ Invalid RTN test ah, 0x1
+ Invalid RTN jnz 0x7ff50fa6ba10
+ Invalid RTN test al, 0x40
+ Invalid RTN jnz 0x7ff50fa6ba00
+ Invalid RTN lea rax, ptr [rip-0x22bd]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0x52fa9]
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2efc99]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa68341
+ Invalid RTN lea rax, ptr [rip+0x3a0cf]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2d2cb9]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa85321
+ Invalid RTN lea rax, ptr [rip+0x1d06f]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2f1489]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa66b51
+ Invalid RTN lea rax, ptr [rip+0x3b6ff]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2f54e9]
+ Invalid RTN test byte ptr [rax+0xb9], 0x1
+ Invalid RTN jnz 0x7ff50fa62af0
+ Invalid RTN lea rax, ptr [rip-0x1297]
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2f68c9]
+ Invalid RTN mov eax, dword ptr [rax+0xb8]
+ Invalid RTN test ah, 0x1
+ Invalid RTN jnz 0x7ff50fa61720
+ Invalid RTN test al, 0x40
+ Invalid RTN jnz 0x7ff50fa61710
+ Invalid RTN lea rax, ptr [rip-0x156d]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0x53ef9]
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2d1569]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa86a71
+ Invalid RTN lea rax, ptr [rip+0x1ba0f]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2ffb09]
+ Invalid RTN test byte ptr [rax+0xb9], 0x1
+ Invalid RTN jnz 0x7ff50fa584d0
+ Invalid RTN lea rax, ptr [rip-0x12b7]
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2d1b49]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa86491
+ Invalid RTN lea rax, ptr [rip+0x1be6f]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rdx, qword ptr [rip+0x2f0449]
+ Invalid RTN lea rax, ptr [rip+0x22]
+ Invalid RTN test dword ptr [rdx+0x80], 0x80000
+ Invalid RTN jnz 0x7ff50fa67b91
+ Invalid RTN lea rax, ptr [rip+0x3a5ff]
+ Invalid RTN ret 
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2ffad9]
+ Invalid RTN test byte ptr [rax+0xb9], 0x1
+ Invalid RTN jnz 0x7ff50fa58500
+ Invalid RTN lea rax, ptr [rip-0x2247]
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2fbb59]
+ Invalid RTN mov eax, dword ptr [rax+0xb8]
+ Invalid RTN test ah, 0x1
+ Invalid RTN jnz 0x7ff50fa5c490
+ Invalid RTN test al, 0x40
+ Invalid RTN jnz 0x7ff50fa5c480
+ Invalid RTN lea rax, ptr [rip-0x3ccd]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0x5c6e9]
+ Invalid RTN ret 
+ Invalid RTN mov rax, qword ptr [rip+0x2ec599]
+ Invalid RTN mov eax, dword ptr [rax+0xb8]
+ Invalid RTN test ah, 0x1
+ Invalid RTN jnz 0x7ff50fa6ba50
+ Invalid RTN test al, 0x40
+ Invalid RTN jnz 0x7ff50fa6ba40
+ Invalid RTN lea rax, ptr [rip-0x13bd]
+ Invalid RTN ret 
+ Invalid RTN lea rax, ptr [rip+0x51c59]
+ Invalid RTN ret 
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe register_tm_clones
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe main
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe setup
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe bpnn_initialize
+ Exe setup
+ Exe setup
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_1d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe alloc_2d_dbl
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_internal_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_randomize_weights
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_zero_weights
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_randomize_row
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe bpnn_create
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe load
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe squash
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_layerforward
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_output_error
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_hidden_error
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_adjust_weights
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe bpnn_train_kernel
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe bpnn_free
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe backprop_face
+ Exe setup
+ Exe setup
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones
+ Exe deregister_tm_clones

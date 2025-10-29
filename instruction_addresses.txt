@@ -1,0 +1,116 @@
+addressByIns:0x400510 | 0x400510 | mov esi, 0x601040
+addressByIns:0xffffffffffffffff | 0x400515 | push rbp
+addressByIns:0xffffffffffffffff | 0x400516 | sub rsi, 0x601040
+addressByIns:0x40051d | 0x40051d | sar rsi, 0x3
+addressByIns:0xffffffffffffffff | 0x400521 | mov rbp, rsp
+addressByIns:0xffffffffffffffff | 0x400524 | mov rax, rsi
+addressByIns:0xffffffffffffffff | 0x400527 | shr rax, 0x3f
+addressByIns:0xffffffffffffffff | 0x40052b | add rsi, rax
+addressByIns:0x40052e | 0x40052e | sar rsi, 0x1
+addressByIns:0x400548 | 0x400548 | pop rbp
+addressByIns:0x400596 | 0x400596 | push rbp
+addressByIns:0xffffffffffffffff | 0x400597 | mov rbp, rsp
+addressByIns:0xffffffffffffffff | 0x40059a | sub rsp, 0x40
+addressByIns:0x40059e | 0x40059e | mov rax, qword ptr fs:[0x28]
+addressByIns:0x4005ab | 0x4005ab | xor eax, eax
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0x400609 | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0x40060e | 0x40060e | mov edi, 0x4006c4
+addressByIns:0x400613 | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0x400609 | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0x40060e | 0x40060e | mov edi, 0x4006c4
+addressByIns:0x400613 | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400600 | 0x400600 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0x400603 | 0x400603 | cdqe 
+addressByIns:0x400605 | 0x400605 | mov edx, dword ptr [rbp+rax*4-0x30]
+addressByIns:0xffffffffffffffff | 0x400609 | mov eax, dword ptr [rbp-0x34]
+addressByIns:0xffffffffffffffff | 0x40060c | mov esi, eax
+addressByIns:0xffffffffffffffff | 0x40060e | mov edi, 0x4006c4
+addressByIns:0xffffffffffffffff | 0x400613 | mov eax, 0x0
+addressByIns:0x40061d | 0x40061d | add dword ptr [rbp-0x34], 0x1
+addressByIns:0x4005fa | 0x4005fa | cmp dword ptr [rbp-0x34], 0x9
+addressByIns:0x400623 | 0x400623 | mov eax, 0x0
+addressByIns:0x400628 | 0x400628 | mov rcx, qword ptr [rbp-0x8]
+addressByIns:0x40062c | 0x40062c | xor rcx, qword ptr fs:[0x28]
+addressByIns:0x40063c | 0x40063c | leave 
+addressByIns:0x4004d0 | 0x4004d0 | mov eax, 0x601047
+addressByIns:0xffffffffffffffff | 0x4004d5 | push rbp
+addressByIns:0xffffffffffffffff | 0x4004d6 | sub rax, 0x601040
+addressByIns:0xffffffffffffffff | 0x4004dc | cmp rax, 0xe
+addressByIns:0xffffffffffffffff | 0x4004e0 | mov rbp, rsp
+addressByIns:0x400500 | 0x400500 | pop rbp

@@ -1,0 +1,2 @@
+push rbx
+sub rsp, 0x4e8

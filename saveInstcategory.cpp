@@ -87,6 +87,7 @@ void initialize_instruction_types() {
     // 使用 insert 方法初始化 std::set
     type_conditions["stack"].insert("POP");
     type_conditions["stack"].insert("PUSH");
+    //type_conditions["stack"].insert("LEAVE");
     // 数据传送指令（Data Transfer Instructions）
     type_conditions["data_transfer"].insert("LEA");
 
@@ -115,8 +116,6 @@ void initialize_instruction_types() {
     //整数位移运算
     type_conditions["integer"].insert("SHL");
     type_conditions["integer"].insert("SHR");
-
-
     // 算术运算指令（Arithmetic Operation Instructions） - 浮点数运算（Floating Point Operations）c
     type_conditions["float"].insert("ADDPD");
     type_conditions["float"].insert("ADDSD");
@@ -134,6 +133,11 @@ void initialize_instruction_types() {
     type_conditions["float"].insert("SQRTSD");
     type_conditions["float"].insert("SUBSD");
     type_conditions["float"].insert("SUBSS");
+    // 算数运算指令-除法操作
+    type_conditions["div"].insert("IDIV");
+    type_conditions["div"].insert("DIVSD");
+    type_conditions["div"].insert("DIVSS");
+
 
     // 逻辑运算指令（Logical Operation Instructions）
     type_conditions["logical"].insert("AND");
@@ -156,7 +160,6 @@ void initialize_instruction_types() {
     type_conditions["call_ret"].insert("CALL_NEAR");
     type_conditions["call_ret"].insert("RET_NEAR");
 
-    type_conditions["control_flow"].insert("LEAVE");
     type_conditions["control_flow"].insert("JB");
     type_conditions["control_flow"].insert("JBE");
     type_conditions["control_flow"].insert("JL");
@@ -172,27 +175,29 @@ void initialize_instruction_types() {
     type_conditions["control_flow"].insert("JS");
     type_conditions["control_flow"].insert("JZ");
 
-    type_conditions["control_flow"].insert("SETB");
-    type_conditions["control_flow"].insert("SETBE");
-    type_conditions["control_flow"].insert("SETL");
-    type_conditions["control_flow"].insert("SETLE");
-    type_conditions["control_flow"].insert("SETNB");
-    type_conditions["control_flow"].insert("SETNBE");
-    type_conditions["control_flow"].insert("SETNL");
-    type_conditions["control_flow"].insert("SETNLE");
-    type_conditions["control_flow"].insert("SETNP");
-    type_conditions["control_flow"].insert("SETNZ");
-    type_conditions["control_flow"].insert("SETZ");
+    // type_conditions["control_flow"].insert("SETB");
+    // type_conditions["control_flow"].insert("SETBE");
+    // type_conditions["control_flow"].insert("SETL");
+    // type_conditions["control_flow"].insert("SETLE");
+    // type_conditions["control_flow"].insert("SETNB");
+    // type_conditions["control_flow"].insert("SETNBE");
+    // type_conditions["control_flow"].insert("SETNL");
+    // type_conditions["control_flow"].insert("SETNLE");
+    // type_conditions["control_flow"].insert("SETNP");
+    // type_conditions["control_flow"].insert("SETNZ");
+    // type_conditions["control_flow"].insert("SETZ");
     
-    type_conditions["control_flow"].insert("CMOVNZ");
-    type_conditions["control_flow"].insert("CMOVNLE");
-    type_conditions["control_flow"].insert("CMOVS");
-    type_conditions["control_flow"].insert("CMOVZ");
-    type_conditions["control_flow"].insert("CMP");
-    type_conditions["control_flow"].insert("CMPSD_XMM");
-    type_conditions["control_flow"].insert("CQO");
+    // type_conditions["control_flow"].insert("CMOVNZ");
+    // type_conditions["control_flow"].insert("CMOVNLE");
+    // type_conditions["control_flow"].insert("CMOVS");
+    // type_conditions["control_flow"].insert("CMOVZ");
+    // type_conditions["control_flow"].insert("CMP");
+    // type_conditions["control_flow"].insert("CMPSD_XMM");
+    // type_conditions["control_flow"].insert("CQO");
 
-    
+    type_conditions["cmp"].insert("CMP");
+    type_conditions["cmp"].insert("CMPSD_XMM");
+
     type_conditions["other"].insert("CDQ");
     type_conditions["other"].insert("CDQE");
     type_conditions["other"].insert("REPE_CMPSB");
@@ -202,6 +207,12 @@ void initialize_instruction_types() {
     type_conditions["other"].insert("UNPCKLPD");
 
 }
+
+/**
+ * 检查当前指令是否符合用户指定的注错类型
+ * @param ins 当前指令对象
+ * @return 如果指令符合指定的类型，则返回 true，否则返回 false
+ */
 bool check_instruction_type(INS ins) {
     // 获取当前指令的助记符
     std::string mnemonic = INS_Mnemonic(ins);
@@ -215,7 +226,7 @@ bool check_instruction_type(INS ins) {
               return true;
             }
             // 检查是否为内存读或写操作
-            if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
+            else if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
                 return true;
             }
         }
@@ -228,7 +239,20 @@ bool check_instruction_type(INS ins) {
               return true;
             }
             // 检查是否为内存读或写操作
-            if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
+            else if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
+                return true;
+            }
+        }
+    }
+
+    // 检查 "div" 类型的指令
+    if (ins_type_value == "div") {
+        if (type_conditions["div"].find(mnemonic) != type_conditions["div"].end()) {
+            if (only_memory.Value() != "1"){
+              return true;
+            }
+            // 检查是否为内存读或写操作
+            else if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
                 return true;
             }
         }
@@ -241,14 +265,14 @@ bool check_instruction_type(INS ins) {
               return true;
             }
             // 检查是否为内存读或写操作
-            if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
+            else if (INS_IsMemoryRead(ins) || INS_IsMemoryWrite(ins)) {
                 return true;
             }
         }
     }
 
     // 检查其他类型
-    if (ins_type_value == "stack" || ins_type_value == "cmp" ||ins_type_value == "div" ) {
+    if (ins_type_value == "stack" || ins_type_value == "cmp" ||ins_type_value == "call_ret" ||ins_type_value == "control_flow") {
       if (type_conditions.find(ins_type_value) != type_conditions.end()) {
           const std::set<std::string>& valid_mnemonics = type_conditions[ins_type_value];
         
@@ -395,7 +419,7 @@ VOID CountInst(INS ins, VOID *v)
   string addressStr = ss.str();  // 获取转换后的字符串
 
   
-  std::string  mnemonic_count_key = args_regmm + "," + args_reg + "," + addressStr + "," + mnemonic;
+  std::string  mnemonic_count_key = args_regmm + "," + args_reg + "," + addressStr + "," + mnemonic + "," + insDis;
   
   //StdMsgLog(mnemonic_count_key);
   bool processInstruction = false;

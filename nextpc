@@ -1,0 +1,10 @@
+thispc:sub rax, qword ptr [rsp+0x298]
+nextpc:4236903
+regw0:rax
+regw1:rflags
+memory-load
+stackr:rsp
+base:rsp
+index:null
+displacement:664
+scale:1

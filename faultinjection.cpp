@@ -8,11 +8,11 @@
 
 #include "utils.h"
 #include "instselector.h"
-
+ 
 //#define INCLUDEALLINST
 #define NOBRANCHES //always set
 //#define NOSTACKFRAMEOP
-//#define ONLYFP
+//#define ONLYFP  
 using namespace std;
 using std::cerr;
 using std::ofstream;
@@ -29,17 +29,15 @@ int activated = 0;
 
 CJmpMap jmp_map;
 
-
-VOID FI_InjectFault_FlagReg(VOID * ip, UINT32 reg_num, UINT32 jmp_num, CONTEXT* ctxt)
-{
+VOID FI_InjectFault_FlagReg(VOID * ip, UINT32 reg_num, UINT32 jmp_num, CONTEXT* ctxt, INS ins){
 	if(fi_iterator == fi_inject_instance) {
 
-    bool isvalid = false;
+		bool isvalid = false;
 
-    const REG reg =  reg_map.findInjectReg(reg_num);
+		const REG reg =  reg_map.findInjectReg(reg_num);
 		if(REG_valid(reg)){
 
-      isvalid = true;
+			isvalid = true;
 
 			CJmpMap::JmpType jmptype = jmp_map.findJmpType(jmp_num);
 			fprintf(activationFile, "EXECUTING flag reg: Original Reg name %s value %p\n", REG_StringShort(reg).c_str(), 
@@ -50,7 +48,8 @@ VOID FI_InjectFault_FlagReg(VOID * ip, UINT32 reg_num, UINT32 jmp_num, CONTEXT* 
 				temp = temp ^ (1UL << inject_bit);
 
 				PIN_SetContextReg( ctxt, reg, temp);
-	    } else if (jmptype == CJmpMap::USPECJMP) {
+	    	} 
+			else if (jmptype == CJmpMap::USPECJMP) {
 				ADDRINT temp = PIN_GetContextReg( ctxt, reg );
 				UINT32 CF_val = (temp & (1UL << CF_BIT)) >> CF_BIT;
 				UINT32 ZF_val = (temp & (1UL << ZF_BIT)) >> ZF_BIT;
@@ -62,7 +61,8 @@ VOID FI_InjectFault_FlagReg(VOID * ip, UINT32 reg_num, UINT32 jmp_num, CONTEXT* 
 					temp = temp | (1UL << ZF_BIT);
 				}
 				PIN_SetContextReg( ctxt, reg, temp);
-	    }	else {
+	    	}	
+			else {
 				ADDRINT temp = PIN_GetContextReg( ctxt, reg );
 				UINT32 SF_val = (temp & (1UL << SF_BIT)) >> SF_BIT;
 				UINT32 OF_val = (temp & (1UL << OF_BIT)) >> OF_BIT;
@@ -96,15 +96,21 @@ VOID FI_InjectFault_FlagReg(VOID * ip, UINT32 reg_num, UINT32 jmp_num, CONTEXT* 
 			PIN_ExecuteAt(ctxt);
 				//PIN_ExecuteAt() will lead to reexecution of the function right after injection
 		}
+		else
+			fi_inject_instance++;
 
+			// // 测试是否会不均等随机
+			// fprintf(activationFile,"ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			//     // 获取指令的地址
+			// ADDRINT address = INS_Address(ins);
 
+			// // 获取指令的汇编代码
+			// std::string disasm = INS_Disassemble(ins);
+			// fprintf(activationFile, "Instruction Address: 0x%lx, Disassembly: %s\n", address, disasm.c_str());
 
- else
-      fi_inject_instance++;
+		
 
-		//fi_iterator ++;
-
-	} 
+			} 
 	fi_iterator ++;
 }
 
@@ -152,12 +158,12 @@ VOID inject_CCS(VOID *ip, UINT32 reg_num, CONTEXT *ctxt){
 		int isvalid = 0;
 		if(REG_valid(reg)){
 			isvalid = 1;
-	//PRINT_MESSAGE(4, ("Executing: Valid Reg name %s\n", REG_StringShort(reg).c_str()));
+			//PRINT_MESSAGE(4, ("Executing: Valid Reg name %s\n", REG_StringShort(reg).c_str()));
 
 			if(reg_map.isFloatReg(reg_num)) {
 				//PRINT_MESSAGE(4, ("Executing: Float Reg name %s\n", REG_StringShort(reg).c_str()));
 
-        if (REG_is_xmm(reg)) {
+        		if (REG_is_xmm(reg)) {
           			fprintf(activationFile, "Executing: xmm: Reg name %s\n", REG_StringShort(reg).c_str());
 					FI_SetXMMContextReg(ctxt, reg, reg_num);
 				}
@@ -198,7 +204,7 @@ VOID inject_CCS(VOID *ip, UINT32 reg_num, CONTEXT *ctxt){
 				//	(VOID*)PIN_GetContextReg( ctxt, reg )));
 			}
 
-                        //FI_PrintActivationInfo();	
+			//FI_PrintActivationInfo();	
 		}
 		if(isvalid){
 			fprintf(activationFile, "Activated: Valid Reg name %s in %p\n", REG_StringShort(reg).c_str(), ip);
@@ -369,7 +375,7 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
             return;
         index = reg_map.findRegIndex(reg);
 	//if(index==200){
-//		LOG("////////////////////////////lixiang//////skip200 xmm ins:" + INS_Disassemble(ins) + "\n");
+	//LOG("////////////////////////////lixiang//////skip200 xmm ins:" + INS_Disassemble(ins) + "\n");
 	//	return;
 	//}
         LOG("ins:" + INS_Disassemble(ins) + "\n"); 
@@ -399,7 +405,7 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
 #ifdef NOBRANCHES
   if(INS_IsBranch(ins) || !INS_HasFallThrough(ins)) {
     //LOG("faultinject: branch/ret inst: " + INS_Disassemble(ins) + "\n");
-		return;
+	return;
   }
 #endif
 
@@ -427,19 +433,17 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
 
 
 // select instruction based on instruction type
-  if(!isInstFITarget(ins))
-    return;
+	if(!isInstFITarget(ins))
+		return;
 
-
-
-
-      if(numW > 1)
-			  randW = random() % numW;
-      else
-        randW = 0;
-
+//select reg
+	if(numW > 1)
+		randW = random() % numW;
+	else
+		randW = 0;
 // Jiesheng
-      reg = INS_RegW(ins, randW);
+	reg = INS_RegW(ins, randW);
+
 #ifdef ONLYFP
     while (!reg_map.isFloatReg(reg)) {
       randW = (randW + 1) % numW;
@@ -447,60 +451,64 @@ VOID instruction_Instrumentation(INS ins, VOID *v){
     }
 #endif
 
-  if(numW > 1 && (reg == REG_RFLAGS || reg == REG_FLAGS || reg == REG_EFLAGS))
-           randW = (randW + 1) % numW; 
-		if(numW > 1 && REG_valid(INS_RegW(ins, randW)))
-            reg = INS_RegW(ins, randW);
-        else
-            reg = INS_RegW(ins, 0);
-        if(!REG_valid(reg)) {
+// select reg
+	//skip flags
+  	if(numW > 1 && (reg == REG_RFLAGS || reg == REG_FLAGS || reg == REG_EFLAGS))
+		randW = (randW + 1) % numW; 
+	if(numW > 1 && REG_valid(INS_RegW(ins, randW)))
+		reg = INS_RegW(ins, randW);
+	else
+		reg = INS_RegW(ins, 0);
+	if(!REG_valid(reg)) {
+		LOG("REGNOTVALID: inst " + INS_Disassemble(ins) + "\n");
+		return;
+	}
+	index = reg_map.findRegIndex(reg);
+	LOG("ins:" + INS_Disassemble(ins) + "\n"); 
+	LOG("reg:" + REG_StringShort(reg) + "\n");
 
-            LOG("REGNOTVALID: inst " + INS_Disassemble(ins) + "\n");
-            return;
-      }
-        index = reg_map.findRegIndex(reg);
-        LOG("ins:" + INS_Disassemble(ins) + "\n"); 
-		LOG("reg:" + REG_StringShort(reg) + "\n");
-
-// Jiesheng Wei
+	// Jiesheng Wei
 	if (reg == REG_RFLAGS || reg == REG_FLAGS || reg == REG_EFLAGS) {
 		INS next_ins = INS_Next(ins);
 		if (INS_Valid(next_ins) && INS_Category(next_ins) == XED_CATEGORY_COND_BR) {
-      //LOG("inject flag bit:" + REG_StringShort(reg) + "\n");
-			
-      UINT32 jmpindex = jmp_map.findJmpIndex(OPCODE_StringShort(INS_Opcode(next_ins)));
+		//LOG("inject flag bit:" + REG_StringShort(reg) + "\n");
+				
+		UINT32 jmpindex = jmp_map.findJmpIndex(OPCODE_StringShort(INS_Opcode(next_ins)));
 			INS_InsertPredicatedCall(ins, IPOINT_AFTER, (AFUNPTR)FI_InjectFault_FlagReg,
 						IARG_INST_PTR,
 						IARG_UINT32, index,
 						IARG_UINT32, jmpindex,
 						IARG_CONTEXT,
+						IARG_PTR, ins,
 						IARG_END);
 			return;
-		} else if (INS_IsMemoryWrite(ins)) {
-        LOG("COMP2MEM: inst " + INS_Disassemble(ins) + "\n");
-				
-        INS_InsertPredicatedCall(
-								ins, IPOINT_BEFORE, (AFUNPTR)FI_InjectFault_Mem,
-								IARG_ADDRINT, INS_Address(ins),
-								IARG_MEMORYREAD_EA,							
-								IARG_MEMORYREAD_SIZE,
-								IARG_END);
-        return;
+		} 
+		else if (INS_IsMemoryWrite(ins)) {
+			LOG("COMP2MEM: inst " + INS_Disassemble(ins) + "\n");
+					
+			INS_InsertPredicatedCall(
+									ins, IPOINT_BEFORE, (AFUNPTR)FI_InjectFault_Mem,
+									IARG_ADDRINT, INS_Address(ins),
+									IARG_MEMORYREAD_EA,							
+									IARG_MEMORYREAD_SIZE,
+									IARG_END);
+			return;
     
-    } else {
-      LOG("NORMAL FLAG REG: inst " + INS_Disassemble(ins) + "\n");
-    }
+		} 
+		else {
+			LOG("NORMAL FLAG REG: inst " + INS_Disassemble(ins) + "\n");
+    	}
 
 	}
 
 
 
-	    INS_InsertPredicatedCall(
-					ins, IPOINT_AFTER, (AFUNPTR)inject_CCS,
-					IARG_ADDRINT, INS_Address(ins),
-					IARG_UINT32, index,	
-					IARG_CONTEXT,
-					IARG_END);		
+	INS_InsertPredicatedCall(
+				ins, IPOINT_AFTER, (AFUNPTR)inject_CCS,
+				IARG_ADDRINT, INS_Address(ins),
+				IARG_UINT32, index,	
+				IARG_CONTEXT,
+				IARG_END);		
 #endif        
 
 }
@@ -585,17 +593,17 @@ int main(int argc, char *argv[])
 {
 	PIN_InitSymbols();
 
-        if (PIN_Init(argc, argv)) return Usage();
+	if (PIN_Init(argc, argv)) return Usage();
   
 
 
-        configInstSelector();
+	configInstSelector();
 
 	fprintf(stderr, "fi index:%d\n", index.Value());
 	get_instance_number(instcount_file.Value().c_str());
 
 	if (!fiecc.Value())
-	INS_AddInstrumentFunction(instruction_Instrumentation, 0);
+		INS_AddInstrumentFunction(instruction_Instrumentation, 0);
 
 	else
 		INS_AddInstrumentFunction(instruction_InstrumentationECC, 0);
