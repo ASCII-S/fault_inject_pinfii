@@ -1,0 +1,14 @@
+inject_pc: 0x402a16
+inject_inst: mov rdi, qword ptr [rsi]
+inject_reg: rsi
+inject_kth: 1
+original_value: 0x7ffdfc9eca18
+injected_value: 0x7ffdfc9eca19
+inject_bit: 0
+next_pc: 0x402a19
+regw_list: rdi
+stackw: no
+base: rsi
+index: none
+displacement: 0
+scale: 0
