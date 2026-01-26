@@ -306,20 +306,21 @@ void trace_single_register(ThreadState* tstate, uint64_t target_id, REG target_r
                 }
             }
 
-            // 继续回溯：该指令的读寄存器
-            for (int i = 0; i < node.num_reads && depth < depth_limit; i++) {
+            // 继续回溯：该指令的读寄存器（使用保存的read_sources）
+            for (int i = 0; i < node.num_reads; i++) {
                 REG read_reg = node.read_regs[i];
+                uint64_t parent_id = node.read_sources[i];  // 直接使用保存的来源ID
+
                 if (!is_valid_data_reg(read_reg)) continue;
 
-                auto parent_it = tstate->shadow_regs.find(read_reg);
-                if (parent_it != tstate->shadow_regs.end()) {
-                    uint64_t parent_id = parent_it->second;
-                    if (visited.find(parent_id) == visited.end() &&
-                        parent_id < target_id &&
-                        (target_id - parent_id) < UnifiedConfig::WINDOW_SIZE) {
-                        next_layer.push_back(parent_id);
-                        visited.insert(parent_id);
-                    }
+                // parent_id == 0 表示未定义
+                if (parent_id == 0) continue;
+
+                if (visited.find(parent_id) == visited.end() &&
+                    parent_id < target_id &&
+                    (target_id - parent_id) < UnifiedConfig::WINDOW_SIZE) {
+                    next_layer.push_back(parent_id);
+                    visited.insert(parent_id);
                 }
             }
         }
@@ -434,17 +435,28 @@ VOID Analyze_Exec(THREADID tid, ADDRINT ip, InstInfo* info) {
     memcpy(node.read_regs, info->read_regs, info->num_reads * sizeof(REG));
     memcpy(node.write_regs, info->write_regs, info->num_writes * sizeof(REG));
 
-    // 2. 更新 shadow_regs
+    // 记录每个读寄存器的来源指令ID（在更新shadow_regs之前！）
+    for (int i = 0; i < node.num_reads; i++) {
+        REG read_reg = node.read_regs[i];
+        auto it = tstate->shadow_regs.find(read_reg);
+        if (it != tstate->shadow_regs.end()) {
+            node.read_sources[i] = it->second;
+        } else {
+            node.read_sources[i] = 0;  // 未定义
+        }
+    }
+
+    // 如果是易崩溃指令且有崩溃寄存器，执行溯源
+    if (info->cp_type != CP_NONE && info->num_crash_regs > 0) {
+        trace_crashprone_inst(tstate, ip, info, current_id);
+    }
+
+    // 更新 shadow_regs
     for (int i = 0; i < node.num_writes; i++) {
         REG reg = node.write_regs[i];
         if (is_valid_data_reg(reg)) {
             tstate->shadow_regs[reg] = current_id;
         }
-    }
-
-    // 3. 如果是易崩溃指令且有崩溃寄存器，执行溯源
-    if (info->cp_type != CP_NONE && info->num_crash_regs > 0) {
-        trace_crashprone_inst(tstate, ip, info, current_id);
     }
 }
 

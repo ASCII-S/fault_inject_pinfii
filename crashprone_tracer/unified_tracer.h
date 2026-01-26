@@ -53,12 +53,14 @@ struct DynNode {
     ADDRINT offset;                // 相对偏移
 
     REG read_regs[8];              // 读寄存器(最多8个)
+    uint64_t read_sources[8];      // 每个读寄存器的来源指令ID
     REG write_regs[4];             // 写寄存器(最多4个)
     uint8_t num_reads;
     uint8_t num_writes;
 
     DynNode() : dyn_id(0), ip(0), offset(0), num_reads(0), num_writes(0) {
         memset(read_regs, 0, sizeof(read_regs));
+        memset(read_sources, 0, sizeof(read_sources));
         memset(write_regs, 0, sizeof(write_regs));
     }
 };
