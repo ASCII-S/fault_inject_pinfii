@@ -1,0 +1,136 @@
+{
+  "tool_info": {
+    "name": "Application Profiler",
+    "version": "2.0",
+    "main_image": "ls"
+  },
+  "instruction_distribution": {
+    "total": {
+      "static_count": 26024,
+      "exec_count": 458139
+    },
+    "by_category": {
+      "int_arithmetic": {
+        "static_count": 1900,
+        "exec_count": 47759
+      },
+      "float": {
+        "static_count": 197,
+        "exec_count": 3195
+      },
+      "memory": {
+        "static_count": 4100,
+        "exec_count": 54101
+      },
+      "control_flow": {
+        "static_count": 5462,
+        "exec_count": 101141
+      },
+      "logic": {
+        "static_count": 1684,
+        "exec_count": 27557
+      },
+      "mov": {
+        "static_count": 8019,
+        "exec_count": 136404
+      },
+      "simd": {
+        "static_count": 1218,
+        "exec_count": 11334
+      },
+      "other": {
+        "static_count": 3444,
+        "exec_count": 76648
+      }
+    },
+    "int_arithmetic_details": {
+      "add": { "static_count": 1052, "exec_count": 38156 },
+      "sub": { "static_count": 798, "exec_count": 9103 },
+      "mul": { "static_count": 26, "exec_count": 166 },
+      "div": { "static_count": 24, "exec_count": 334 }
+    },
+    "memory_details": {
+      "load": { "static_count": 2235, "exec_count": 33905 },
+      "store": { "static_count": 44, "exec_count": 1053 },
+      "stack": { "static_count": 1821, "exec_count": 19143 }
+    },
+    "control_flow_details": {
+      "jmp": { "static_count": 679, "exec_count": 9963 },
+      "jcc": { "static_count": 3633, "exec_count": 82962 },
+      "call": { "static_count": 701, "exec_count": 4110 },
+      "ret": { "static_count": 449, "exec_count": 4106 }
+    },
+    "logic_details": {
+      "bitwise": { "static_count": 1270, "exec_count": 16796 },
+      "shift": { "static_count": 414, "exec_count": 10761 }
+    },
+    "simd_details": {
+      "sse": { "static_count": 1038, "exec_count": 9280 },
+      "avx": { "static_count": 180, "exec_count": 2054 },
+      "avx512": { "static_count": 0, "exec_count": 0 }
+    }
+  },
+  "numeric_sensitivity": {
+    "float_inst_static": 197,
+    "float_inst_exec": 3195,
+    "operation_distribution": {
+      "add_sub": 0,
+      "mul": 0,
+      "div": 0,
+      "sqrt": 0,
+      "fma": 0,
+      "cmp": 0,
+      "cvt": 0
+    },
+    "precision_distribution": {
+      "single": 1944,
+      "double": 1251,
+      "x87": 0,
+      "simd": 3195
+    }
+  },
+  "error_absorption": {
+    "cmp_inst_exec": 49477,
+    "test_inst_exec": 32955,
+    "saturate_inst_exec": 0,
+    "minmax_inst_exec": 294,
+    "abs_inst_exec": 0,
+    "round_inst_exec": 0
+  },
+  "library_calls": {
+    "total_lib_calls": 747,
+    "user_func_calls": 286,
+    "by_category": {
+      "memory_lib": {
+        "call_count": 133,
+        "unique_funcs": 7,
+        "functions": ["brk", "calloc", "free", "malloc", "mmap", "realloc", "sbrk"]
+      },
+      "io_lib": {
+        "call_count": 92,
+        "unique_funcs": 25,
+        "functions": ["_IO_default_finish", "_IO_default_xsputn", "_IO_do_write", "_IO_doallocbuf", "_IO_fclose", "_IO_fflush", "_IO_file_close", "_IO_file_close_it", "_IO_file_doallocate", "_IO_file_finish", "_IO_file_fopen", "_IO_file_open", "_IO_file_overflow", "_IO_file_read", "_IO_file_stat", "_IO_file_sync", "_IO_file_underflow", "_IO_file_write", "_IO_file_xsputn", "_IO_fopen", "_IO_link_in", "_IO_setb", "_IO_switch_to_get_mode", "_IO_un_link", "_IO_unsave_markers"]
+      },
+      "string_lib": {
+        "call_count": 15,
+        "unique_funcs": 1,
+        "functions": ["strdup"]
+      },
+      "pthread_lib": {
+        "call_count": 10,
+        "unique_funcs": 4,
+        "functions": ["pthread_mutex_lock", "pthread_mutex_unlock", "pthread_rwlock_unlock", "pthread_rwlock_wrlock"]
+      },
+      "other_lib": {
+        "call_count": 497,
+        "unique_funcs": 74,
+        "functions": [".fini", ".plt", ".plt.got", ".plt.sec", ".text", "__call_tls_dtors", "__close_nocancel", "__ctype_get_mb_cur_max", "__ctype_init", "__cxa_atexit", "__cxa_finalize", "__default_morecore", "__do_global_dtors_aux", "__errno_location", "__fpending", "__freading", "__fsetlocking", "__fxstat64", "__getpagesize", "__libc_malloc", "__libc_pthread_init", "__libc_sigaction", "__libc_start_main", "__open64_nocancel", "__overflow", "__pthread_initialize_minimal", "__pthread_tunables_init", "__read", "__register_atfork", "__sigsetjmp", "__sysconf", "__tunable_get_val", "__underflow", "__write", "_dl_addr", "_dl_allocate_tls_init", "_dl_catch_exception", "_dl_debug_state", "_dl_find_dso_for_object", "_dl_get_tls_static_info", "_exit", "_fini", "_init", "_pthread_cleanup_pop_restore", "_pthread_cleanup_push_defer", "_setjmp", "access", "bindtextdomain", "closedir", "deregister_tm_clones", "elision_init", "exit", "fileno", "frame_dummy", "fwrite_unlocked", "getdelim", "getdents64", "getenv", "getopt_long", "getrlimit64", "ioctl", "isatty", "memmem", "open64", "opendir", "readdir64", "register_tm_clones", "selinuxfs_exists", "setlocale", "statfs", "strcoll", "strcoll_l", "tcgetattr", "textdomain"]
+      }
+    }
+  },
+  "global_stats": {
+    "total_inst_static": 26024,
+    "total_inst_exec": 458139,
+    "total_func_calls": 1033
+  }
+}
