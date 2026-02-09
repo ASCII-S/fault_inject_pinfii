@@ -125,6 +125,7 @@ inject_pc: 0x402a16                      # 注错指令地址
 inject_inst: mov rdi, qword ptr [rsi]   # 注错指令反汇编
 inject_reg: rsi                          # 注错寄存器
 inject_kth: 1                            # 第几次执行时注错
+dynamic_ins_count: 123456                # 注错时的动态指令数
 original_value: 0x7ffff6317728           # 原始寄存器值
 injected_value: 0x7ffff6317729           # 注错后寄存器值
 inject_bit: 0                            # 翻转的比特位

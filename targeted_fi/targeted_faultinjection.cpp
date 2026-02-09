@@ -23,6 +23,7 @@ using namespace std;
 // ========== 全局变量 ==========
 
 UINT64 g_exec_count = 0;                // 目标指令执行计数
+UINT64 g_total_ins_count = 0;           // 全局动态指令计数
 bool g_injected = false;                 // 是否已注错
 REG g_target_reg_enum = REG_INVALID();   // 目标寄存器枚举
 std::string g_target_inst_disasm = "";   // 目标指令反汇编
@@ -38,6 +39,7 @@ struct InjectionInfo {
     ADDRINT injected_value;
     INT32 inject_bit;
     ADDRINT next_pc;
+    UINT64 dynamic_ins_count;       // 注错时的动态指令数
 
     // 内存操作信息
     std::string regw_list;          // 写寄存器列表
@@ -181,6 +183,7 @@ void write_inject_info() {
     fprintf(fp, "inject_inst: %s\n", g_inject_info.inject_inst.c_str());
     fprintf(fp, "inject_reg: %s\n", g_inject_info.inject_reg.c_str());
     fprintf(fp, "inject_kth: %lu\n", g_inject_info.inject_kth);
+    fprintf(fp, "dynamic_ins_count: %lu\n", g_inject_info.dynamic_ins_count);
     fprintf(fp, "original_value: 0x%lx\n", g_inject_info.original_value);
     fprintf(fp, "injected_value: 0x%lx\n", g_inject_info.injected_value);
     fprintf(fp, "inject_bit: %d\n", g_inject_info.inject_bit);
@@ -197,6 +200,11 @@ void write_inject_info() {
 }
 
 // ========== 分析回调 ==========
+
+// 动态指令计数回调
+VOID Count_Ins() {
+    g_total_ins_count++;
+}
 
 VOID Analyze_TargetInst(THREADID tid, ADDRINT ip, CONTEXT* ctxt, VOID* v) {
     g_exec_count++;
@@ -233,6 +241,7 @@ VOID Analyze_TargetInst(THREADID tid, ADDRINT ip, CONTEXT* ctxt, VOID* v) {
         g_inject_info.inject_inst = g_target_inst_disasm;
         g_inject_info.inject_reg = target_reg.Value();
         g_inject_info.inject_kth = g_exec_count;
+        g_inject_info.dynamic_ins_count = g_total_ins_count;
         g_inject_info.next_pc = g_next_pc;
 
         // 执行注错
@@ -262,6 +271,9 @@ VOID Analyze_TargetInst(THREADID tid, ADDRINT ip, CONTEXT* ctxt, VOID* v) {
 
 VOID Instruction(INS ins, VOID* v) {
     ADDRINT ip = INS_Address(ins);
+
+    // 对所有指令插桩，统计动态指令数
+    INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)Count_Ins, IARG_END);
 
     // 检查是否为目标指令
     if (ip == target_pc.Value()) {
@@ -314,9 +326,11 @@ VOID Instruction(INS ins, VOID* v) {
         // 检查是否为栈写
         g_inject_info.stackw = INS_IsStackWrite(ins) ? "yes" : "no";
 
-        // 插入分析回调（IPOINT_AFTER）
+        // 插入分析回调（IPOINT_BEFORE）
+        // 注意：使用 IPOINT_BEFORE 确保在指令执行前修改寄存器
+        // IPOINT_AFTER 对于控制流指令可能不会被调用
         INS_InsertCall(
-            ins, IPOINT_AFTER, (AFUNPTR)Analyze_TargetInst,
+            ins, IPOINT_BEFORE, (AFUNPTR)Analyze_TargetInst,
             IARG_THREAD_ID,
             IARG_INST_PTR,
             IARG_CONTEXT,
@@ -330,6 +344,7 @@ VOID Instruction(INS ins, VOID* v) {
 
 VOID Fini(INT32 code, VOID* v) {
     fprintf(stderr, "[targeted_fi] 程序退出，目标指令共执行 %lu 次\n", g_exec_count);
+    fprintf(stderr, "[targeted_fi] 总动态指令数: %lu\n", g_total_ins_count);
 
     if (!g_injected) {
         fprintf(stderr, "[警告] 未执行注错！目标指令执行次数 %lu < 目标次数 %lu\n",
