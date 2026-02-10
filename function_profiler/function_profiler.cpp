@@ -18,11 +18,14 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
+#include <vector>
 
 using std::cerr;
 using std::endl;
 using std::ofstream;
 using std::stringstream;
+using std::vector;
 
 // ========== 全局变量 ==========
 
@@ -81,6 +84,34 @@ string addr_to_hex(ADDRINT addr) {
     stringstream ss;
     ss << "0x" << std::hex << addr;
     return ss.str();
+}
+
+/**
+ * 计算指令类型分布熵
+ * H = -Σ(p_i * log2(p_i))
+ * @param counts 各类型指令的计数数组
+ * @param n 类型数量
+ * @return 熵值（0表示完全单一，越大表示越均匀）
+ */
+double ComputeInstructionEntropy(const vector<UINT64>& counts) {
+    UINT64 total = 0;
+    for (UINT64 c : counts) {
+        total += c;
+    }
+
+    if (total == 0) {
+        return 0.0;
+    }
+
+    double entropy = 0.0;
+    for (UINT64 c : counts) {
+        if (c > 0) {
+            double p = (double)c / (double)total;
+            entropy -= p * log2(p);
+        }
+    }
+
+    return entropy;
 }
 
 /**
@@ -219,6 +250,61 @@ bool IsPureComputeInstruction(INS ins) {
            IsLogicInstruction(ins) ||
            IsFloatInstruction(ins) ||
            IsSIMDInstruction(ins);
+}
+
+/**
+ * 判断是否为比较指令
+ * 包括：CMP/TEST/CMPXCHG等
+ */
+bool IsCompareInstruction(INS ins) {
+    string mnemonic = INS_Mnemonic(ins);
+    if (mnemonic.find("CMP") != string::npos ||
+        mnemonic.find("TEST") != string::npos ||
+        mnemonic.find("COMIS") != string::npos ||   // SSE比较
+        mnemonic.find("UCOMIS") != string::npos) {  // SSE无序比较
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 判断是否为栈操作指令
+ * 包括：PUSH/POP/ENTER/LEAVE等
+ */
+bool IsStackInstruction(INS ins) {
+    string mnemonic = INS_Mnemonic(ins);
+    if (mnemonic.find("PUSH") != string::npos ||
+        mnemonic.find("POP") != string::npos ||
+        mnemonic == "ENTER" ||
+        mnemonic == "LEAVE") {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 判断是否为字符串操作指令
+ * 包括：REP/MOVS/STOS/LODS/SCAS/CMPS等
+ */
+bool IsStringInstruction(INS ins) {
+    string mnemonic = INS_Mnemonic(ins);
+    if (mnemonic.find("MOVS") != string::npos ||
+        mnemonic.find("STOS") != string::npos ||
+        mnemonic.find("LODS") != string::npos ||
+        mnemonic.find("SCAS") != string::npos ||
+        mnemonic.find("CMPS") != string::npos ||
+        mnemonic.find("REP") != string::npos) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 判断是否为NOP指令
+ */
+bool IsNopInstruction(INS ins) {
+    string mnemonic = INS_Mnemonic(ins);
+    return (mnemonic == "NOP" || mnemonic.find("NOP") != string::npos);
 }
 
 /**
@@ -393,6 +479,41 @@ VOID CountDataMovementExec(FunctionProfile* profile) {
     __sync_fetch_and_add(&(profile->data_movement_exec), 1);
 }
 
+/**
+ * 比较指令执行回调
+ */
+VOID CountCompareExec(FunctionProfile* profile) {
+    __sync_fetch_and_add(&(profile->compare_exec), 1);
+}
+
+/**
+ * 栈操作指令执行回调
+ */
+VOID CountStackExec(FunctionProfile* profile) {
+    __sync_fetch_and_add(&(profile->stack_exec), 1);
+}
+
+/**
+ * 字符串指令执行回调
+ */
+VOID CountStringExec(FunctionProfile* profile) {
+    __sync_fetch_and_add(&(profile->string_exec), 1);
+}
+
+/**
+ * NOP指令执行回调
+ */
+VOID CountNopExec(FunctionProfile* profile) {
+    __sync_fetch_and_add(&(profile->nop_exec), 1);
+}
+
+/**
+ * 其他指令执行回调
+ */
+VOID CountOtherExec(FunctionProfile* profile) {
+    __sync_fetch_and_add(&(profile->other_exec), 1);
+}
+
 // ========== D类: 寄存器使用回调 ==========
 
 /**
@@ -418,15 +539,45 @@ VOID CountBranchDirection(FunctionProfile* profile, BOOL taken) {
 
 /**
  * 循环迭代计数回调（回边执行时调用）
+ * 同时跟踪循环嵌套深度
+ * @param profile 函数剖析数据指针
+ * @param backedge_addr 回边指令地址（用于标识不同的循环）
+ * @param taken 分支是否跳转（回边是否执行）
  */
-VOID CountLoopIteration(FunctionProfile* profile) {
-    __sync_fetch_and_add(&(profile->loop_iter_total), 1);
+VOID TrackLoopExecution(FunctionProfile* profile, ADDRINT backedge_addr, BOOL taken) {
+    if (taken) {
+        // 回边执行，表示循环继续
+        __sync_fetch_and_add(&(profile->loop_iter_total), 1);
+
+        // 检查是否是新进入的循环
+        PIN_GetLock(&g_lock, 1);
+        if (profile->active_loops.find(backedge_addr) == profile->active_loops.end()) {
+            // 新循环，增加嵌套深度
+            profile->active_loops.insert(backedge_addr);
+            profile->current_loop_depth = profile->active_loops.size();
+            if (profile->current_loop_depth > profile->loop_depth_max) {
+                profile->loop_depth_max = profile->current_loop_depth;
+            }
+        }
+        PIN_ReleaseLock(&g_lock);
+    } else {
+        // 回边未执行，表示循环退出
+        PIN_GetLock(&g_lock, 1);
+        profile->active_loops.erase(backedge_addr);
+        profile->current_loop_depth = profile->active_loops.size();
+        PIN_ReleaseLock(&g_lock);
+    }
 }
 
 /**
  * 调用深度跟踪回调 - 函数调用
+ * 同时统计调用其他函数的次数
  */
 VOID TrackCallDepthEnter(FunctionProfile* profile) {
+    // 统计调用其他函数次数
+    __sync_fetch_and_add(&(profile->call_other_exec), 1);
+
+    // 更新调用深度
     UINT32 new_depth = __sync_add_and_fetch(&(profile->current_call_depth), 1);
     // 更新最大深度（无锁方式）
     UINT32 old_max = profile->call_depth_max;
@@ -576,6 +727,37 @@ VOID TrackRegisterLifetime(FunctionProfile* profile,
     }
 }
 
+// ========== H类: 动态圈复杂度回调 ==========
+
+/**
+ * BBL执行回调：跟踪基本块执行和控制流边
+ * @param profile 函数剖析数据指针
+ * @param bbl_addr 当前BBL的起始地址
+ */
+VOID TrackBBLExecution(FunctionProfile* profile, ADDRINT bbl_addr) {
+    // 统计BBL执行次数
+    __sync_fetch_and_add(&(profile->bbl_exec), 1);
+
+    // 记录执行过的唯一BBL
+    PIN_GetLock(&g_lock, 1);
+    profile->executed_bbls.insert(bbl_addr);
+
+    // 记录控制流边 (上一个BBL -> 当前BBL)
+    if (profile->last_bbl_addr != 0) {
+        profile->executed_edges.insert(std::make_pair(profile->last_bbl_addr, bbl_addr));
+    }
+    profile->last_bbl_addr = bbl_addr;
+    PIN_ReleaseLock(&g_lock);
+}
+
+/**
+ * 函数入口时重置BBL跟踪状态
+ * 每次函数调用开始时，重置last_bbl_addr以避免跨调用的虚假边
+ */
+VOID ResetBBLTracking(FunctionProfile* profile) {
+    profile->last_bbl_addr = 0;
+}
+
 // ========== 静态分析函数 ==========
 
 /**
@@ -682,6 +864,36 @@ VOID AnalyzeStaticInstruction(INS ins, FunctionProfile& profile) {
     if (IsDataMovementInstruction(ins)) {
         profile.data_movement_static++;
     }
+
+    // 比较指令
+    if (IsCompareInstruction(ins)) {
+        profile.compare_static++;
+    }
+
+    // 栈操作指令
+    if (IsStackInstruction(ins)) {
+        profile.stack_static++;
+    }
+
+    // 字符串指令
+    if (IsStringInstruction(ins)) {
+        profile.string_static++;
+    }
+
+    // NOP指令
+    if (IsNopInstruction(ins)) {
+        profile.nop_static++;
+    }
+
+    // 其他未分类指令
+    if (!IsArithmeticInstruction(ins) && !IsLogicInstruction(ins) &&
+        !IsFloatInstruction(ins) && !IsSIMDInstruction(ins) &&
+        !IsDataMovementInstruction(ins) && !IsCompareInstruction(ins) &&
+        !IsStackInstruction(ins) && !IsStringInstruction(ins) &&
+        !IsNopInstruction(ins) && !INS_IsBranch(ins) && !INS_IsCall(ins) &&
+        !INS_IsRet(ins)) {
+        profile.other_static++;
+    }
 }
 
 /**
@@ -774,6 +986,46 @@ VOID InstrumentDynamicAnalysis(INS ins, FunctionProfile* profile, ADDRINT pc) {
                        IARG_END);
     }
 
+    // 比较指令执行
+    if (IsCompareInstruction(ins)) {
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountCompareExec,
+                       IARG_PTR, profile,
+                       IARG_END);
+    }
+
+    // 栈操作指令执行
+    if (IsStackInstruction(ins)) {
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountStackExec,
+                       IARG_PTR, profile,
+                       IARG_END);
+    }
+
+    // 字符串指令执行
+    if (IsStringInstruction(ins)) {
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountStringExec,
+                       IARG_PTR, profile,
+                       IARG_END);
+    }
+
+    // NOP指令执行
+    if (IsNopInstruction(ins)) {
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountNopExec,
+                       IARG_PTR, profile,
+                       IARG_END);
+    }
+
+    // 其他未分类指令执行
+    if (!IsArithmeticInstruction(ins) && !IsLogicInstruction(ins) &&
+        !IsFloatInstruction(ins) && !IsSIMDInstruction(ins) &&
+        !IsDataMovementInstruction(ins) && !IsCompareInstruction(ins) &&
+        !IsStackInstruction(ins) && !IsStringInstruction(ins) &&
+        !IsNopInstruction(ins) && !INS_IsBranch(ins) && !INS_IsCall(ins) &&
+        !INS_IsRet(ins)) {
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountOtherExec,
+                       IARG_PTR, profile,
+                       IARG_END);
+    }
+
     // ========== D类: 寄存器使用动态统计 ==========
     UINT32 num_rregs = INS_MaxNumRRegs(ins);
     UINT32 num_wregs = INS_MaxNumWRegs(ins);
@@ -794,13 +1046,15 @@ VOID InstrumentDynamicAnalysis(INS ins, FunctionProfile* profile, ADDRINT pc) {
                        IARG_END);
     }
 
-    // 循环迭代统计（回边）
+    // 循环迭代统计和嵌套深度跟踪（回边）
     if (INS_IsBranch(ins) && INS_IsDirectControlFlow(ins)) {
         ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
         if (target < pc && target >= profile->start_addr && target < profile->end_addr) {
-            // 这是一个回边，统计循环迭代
-            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountLoopIteration,
+            // 这是一个回边，统计循环迭代和嵌套深度
+            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)TrackLoopExecution,
                            IARG_PTR, profile,
+                           IARG_ADDRINT, pc,  // 回边地址作为循环标识
+                           IARG_BRANCH_TAKEN,
                            IARG_END);
         }
     }
@@ -934,9 +1188,97 @@ VOID ImageLoad(IMG img, VOID *v) {
                           IARG_PTR, &profile,
                           IARG_END);
 
-            // 静态分析并动态插桩每条指令
+            // H类: 函数入口时重置BBL跟踪状态
+            RTN_InsertCall(rtn, IPOINT_BEFORE, (AFUNPTR)ResetBBLTracking,
+                          IARG_PTR, &profile,
+                          IARG_END);
+
+            // H类: 静态BBL计数和静态边计数
+            // 遍历指令，识别BBL边界（BBL以控制流指令结束或被跳转目标开始）
+            set<ADDRINT> bbl_heads;  // BBL起始地址集合
+            bbl_heads.insert(rtn_addr);  // 函数入口是第一个BBL
+
+            // 第一遍：收集所有BBL头（跳转目标）
+            for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
+                if (INS_IsDirectControlFlow(ins)) {
+                    ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+                    // 只记录函数内部的跳转目标
+                    if (target >= profile.start_addr && target < profile.end_addr) {
+                        bbl_heads.insert(target);
+                    }
+                }
+                // 控制流指令的下一条指令也是BBL头
+                if (INS_IsControlFlow(ins)) {
+                    INS next = INS_Next(ins);
+                    if (INS_Valid(next)) {
+                        bbl_heads.insert(INS_Address(next));
+                    }
+                }
+            }
+
+            // 静态BBL数量
+            profile.bbl_static = bbl_heads.size();
+
+            // 计算静态边数量
+            // 边类型：1) fall-through边  2) 跳转边（函数内）
+            set<std::pair<ADDRINT, ADDRINT>> static_edges;
+            ADDRINT current_bbl_start = rtn_addr;
+
+            for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
+                INS next_ins = INS_Next(ins);
+
+                // 检查下一条指令是否是新BBL的开始
+                if (INS_Valid(next_ins)) {
+                    ADDRINT next_pc = INS_Address(next_ins);
+                    if (bbl_heads.find(next_pc) != bbl_heads.end()) {
+                        // 当前指令是BBL的最后一条
+
+                        // 如果是控制流指令
+                        if (INS_IsControlFlow(ins)) {
+                            // 添加跳转边（函数内直接跳转）
+                            if (INS_IsDirectControlFlow(ins)) {
+                                ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+                                if (target >= profile.start_addr && target < profile.end_addr) {
+                                    static_edges.insert(std::make_pair(current_bbl_start, target));
+                                }
+                            }
+                            // 如果有fall-through（条件分支），添加fall-through边
+                            if (INS_HasFallThrough(ins)) {
+                                static_edges.insert(std::make_pair(current_bbl_start, next_pc));
+                            }
+                        } else {
+                            // 非控制流指令结束的BBL（被跳转目标分割），添加顺序边
+                            static_edges.insert(std::make_pair(current_bbl_start, next_pc));
+                        }
+
+                        // 更新当前BBL起始地址
+                        current_bbl_start = next_pc;
+                    }
+                } else {
+                    // 函数最后一条指令
+                    if (INS_IsDirectControlFlow(ins)) {
+                        ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+                        if (target >= profile.start_addr && target < profile.end_addr) {
+                            static_edges.insert(std::make_pair(current_bbl_start, target));
+                        }
+                    }
+                }
+            }
+
+            // 静态边数量
+            profile.edge_static = static_edges.size();
+
+            // 第二遍：静态分析、动态插桩，并在BBL头插入跟踪回调
             for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
                 ADDRINT pc = INS_Address(ins);
+
+                // H类: 如果是BBL头，插入BBL跟踪回调
+                if (bbl_heads.find(pc) != bbl_heads.end()) {
+                    INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)TrackBBLExecution,
+                                   IARG_PTR, &profile,
+                                   IARG_ADDRINT, pc,
+                                   IARG_END);
+                }
 
                 // 静态分析
                 AnalyzeStaticInstruction(ins, profile);
@@ -989,13 +1331,17 @@ VOID Fini(INT32 code, VOID *v) {
     bool first_func = true;
     int func_count = 0;
 
-    for (const auto& kv : g_function_profiles) {
-        const FunctionProfile& profile = kv.second;
+    for (auto& kv : g_function_profiles) {
+        FunctionProfile& profile = kv.second;
 
         // 过滤：只输出调用次数满足条件的函数
         if (profile.call_exec < (UINT64)min_calls) {
             continue;
         }
+
+        // H类: 计算动态圈复杂度
+        profile.unique_bbl_exec = profile.executed_bbls.size();
+        profile.unique_edge_exec = profile.executed_edges.size();
 
         if (!first_func) {
             outFile << ",\n";
@@ -1048,12 +1394,61 @@ VOID Fini(INT32 code, VOID *v) {
         outFile << "        \"simd_static\": " << profile.simd_static << ",\n";
         outFile << "        \"pure_compute_static\": " << profile.pure_compute_static << ",\n";
         outFile << "        \"data_movement_static\": " << profile.data_movement_static << ",\n";
+        outFile << "        \"compare_static\": " << profile.compare_static << ",\n";
+        outFile << "        \"stack_static\": " << profile.stack_static << ",\n";
+        outFile << "        \"string_static\": " << profile.string_static << ",\n";
+        outFile << "        \"nop_static\": " << profile.nop_static << ",\n";
+        outFile << "        \"other_static\": " << profile.other_static << ",\n";
         outFile << "        \"arith_exec\": " << profile.arith_exec << ",\n";
         outFile << "        \"logic_exec\": " << profile.logic_exec << ",\n";
         outFile << "        \"float_exec\": " << profile.float_exec << ",\n";
         outFile << "        \"simd_exec\": " << profile.simd_exec << ",\n";
         outFile << "        \"pure_compute_exec\": " << profile.pure_compute_exec << ",\n";
-        outFile << "        \"data_movement_exec\": " << profile.data_movement_exec << "\n";
+        outFile << "        \"data_movement_exec\": " << profile.data_movement_exec << ",\n";
+        outFile << "        \"compare_exec\": " << profile.compare_exec << ",\n";
+        outFile << "        \"stack_exec\": " << profile.stack_exec << ",\n";
+        outFile << "        \"string_exec\": " << profile.string_exec << ",\n";
+        outFile << "        \"nop_exec\": " << profile.nop_exec << ",\n";
+        outFile << "        \"other_exec\": " << profile.other_exec << "\n";
+        outFile << "      },\n";
+
+        // B3类：指令类型分布熵
+        // 静态熵：基于静态指令分布
+        vector<UINT64> static_counts;
+        static_counts.push_back(profile.arith_static);
+        static_counts.push_back(profile.logic_static);
+        static_counts.push_back(profile.float_static);
+        static_counts.push_back(profile.simd_static);
+        static_counts.push_back(profile.data_movement_static);
+        static_counts.push_back(profile.compare_static);
+        static_counts.push_back(profile.stack_static);
+        static_counts.push_back(profile.string_static);
+        static_counts.push_back(profile.nop_static);
+        static_counts.push_back(profile.branch_static);
+        static_counts.push_back(profile.call_static);
+        static_counts.push_back(profile.return_static);
+        static_counts.push_back(profile.other_static);
+        double static_entropy = ComputeInstructionEntropy(static_counts);
+
+        // 动态熵：基于动态执行分布
+        vector<UINT64> exec_counts;
+        exec_counts.push_back(profile.arith_exec);
+        exec_counts.push_back(profile.logic_exec);
+        exec_counts.push_back(profile.float_exec);
+        exec_counts.push_back(profile.simd_exec);
+        exec_counts.push_back(profile.data_movement_exec);
+        exec_counts.push_back(profile.compare_exec);
+        exec_counts.push_back(profile.stack_exec);
+        exec_counts.push_back(profile.string_exec);
+        exec_counts.push_back(profile.nop_exec);
+        exec_counts.push_back(profile.branch_exec);
+        exec_counts.push_back(profile.call_other_exec);
+        exec_counts.push_back(profile.other_exec);
+        double exec_entropy = ComputeInstructionEntropy(exec_counts);
+
+        outFile << "      \"instruction_entropy\": {\n";
+        outFile << "        \"inst_type_entropy_static\": " << std::fixed << std::setprecision(4) << static_entropy << ",\n";
+        outFile << "        \"inst_type_entropy_exec\": " << std::fixed << std::setprecision(4) << exec_entropy << "\n";
         outFile << "      },\n";
 
         // C类：控制流
@@ -1063,6 +1458,7 @@ VOID Fini(INT32 code, VOID *v) {
         outFile << "        \"loop_static\": " << profile.loop_static << ",\n";
         outFile << "        \"return_static\": " << profile.return_static << ",\n";
         outFile << "        \"call_static\": " << profile.call_static << ",\n";
+        outFile << "        \"call_other_exec\": " << profile.call_other_exec << ",\n";
         outFile << "        \"indirect_exec\": " << profile.indirect_exec << "\n";
         outFile << "      },\n";
 
@@ -1083,7 +1479,8 @@ VOID Fini(INT32 code, VOID *v) {
         outFile << "        \"cond_branch_static\": " << profile.cond_branch_static << ",\n";
         outFile << "        \"uncond_branch_static\": " << profile.uncond_branch_static << ",\n";
         outFile << "        \"loop_iter_total\": " << profile.loop_iter_total << ",\n";
-        outFile << "        \"call_depth_max\": " << profile.call_depth_max << "\n";
+        outFile << "        \"call_depth_max\": " << profile.call_depth_max << ",\n";
+        outFile << "        \"loop_depth_max\": " << profile.loop_depth_max << "\n";
         outFile << "      }";
 
         // F类：数据依赖（可选）
@@ -1106,6 +1503,26 @@ VOID Fini(INT32 code, VOID *v) {
             outFile << "        \"first_use_dist_total\": " << profile.first_use_dist_total << "\n";
             outFile << "      }";
         }
+
+        // H类：圈复杂度
+        outFile << ",\n";
+        outFile << "      \"cyclomatic_complexity\": {\n";
+        // 静态圈复杂度
+        outFile << "        \"bbl_static\": " << profile.bbl_static << ",\n";
+        outFile << "        \"edge_static\": " << profile.edge_static << ",\n";
+        // 静态圈复杂度 = E - N + 2
+        INT32 static_cc = (INT32)profile.edge_static - (INT32)profile.bbl_static + 2;
+        if (static_cc < 1) static_cc = 1;  // 最小为1
+        outFile << "        \"static_cyclomatic\": " << static_cc << ",\n";
+        // 动态圈复杂度
+        outFile << "        \"bbl_exec\": " << profile.bbl_exec << ",\n";
+        outFile << "        \"unique_bbl_exec\": " << profile.unique_bbl_exec << ",\n";
+        outFile << "        \"unique_edge_exec\": " << profile.unique_edge_exec << ",\n";
+        // 动态圈复杂度 = E - N + 2 (对于单连通图)
+        INT32 dynamic_cc = (INT32)profile.unique_edge_exec - (INT32)profile.unique_bbl_exec + 2;
+        if (dynamic_cc < 1) dynamic_cc = 1;  // 最小为1
+        outFile << "        \"dynamic_cyclomatic\": " << dynamic_cc << "\n";
+        outFile << "      }";
 
         outFile << "\n";
 

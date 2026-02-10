@@ -421,10 +421,108 @@ if (IsDataMovementInstruction(ins)) {
 
 ---
 
-### 4.5 indirect_exec (间接跳转执行次数)
+### 4.5 call_other_exec (调用其他函数执行次数)
+
+**原理说明**:
+- 统计函数内CALL指令的动态执行次数
+- 反映函数运行时对其他函数的实际依赖程度
+- 与 `call_exec`（被调用次数）形成调用关系的两端
+
+**技术实现**:
+```cpp
+VOID TrackCallDepthEnter(FunctionProfile* profile) {
+    // 统计调用其他函数次数
+    __sync_fetch_and_add(&(profile->call_other_exec), 1);
+    // ...
+}
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高调用次数 | 错误可能传播到被调用函数，影响范围扩大 |
+| 低调用次数 | 函数相对独立，错误影响局部化 |
+| call_other_exec >> call_static | 调用点被频繁执行（循环中调用） |
+
+**与 call_exec 的区别**:
+| 指标 | 含义 | 视角 |
+|------|------|------|
+| `call_exec` | 本函数被其他函数调用的次数 | 被调用者 |
+| `call_other_exec` | 本函数调用其他函数的次数 | 调用者 |
+
+---
+
+### 4.6 indirect_exec (间接跳转执行次数)
 
 **原理说明**:
 - 统计间接跳转/调用指令的动态执行次数（目标地址在寄存器中）
+
+---
+
+### 4.7 细化指令类型（用于熵计算）
+
+除了基本的算术、逻辑、浮点、SIMD指令外，还统计以下细化类型：
+
+| 指标 | 说明 | 包含指令 |
+|------|------|----------|
+| `compare_static/exec` | 比较指令 | CMP, TEST, COMIS, UCOMIS |
+| `stack_static/exec` | 栈操作指令 | PUSH, POP, ENTER, LEAVE |
+| `string_static/exec` | 字符串指令 | MOVS, STOS, LODS, SCAS, CMPS, REP |
+| `nop_static/exec` | NOP指令 | NOP |
+| `other_static/exec` | 其他未分类指令 | 不属于以上任何类别的指令 |
+
+---
+
+### 4.8 指令类型分布熵 (B3类)
+
+**原理说明**:
+- 熵（Entropy）衡量指令类型分布的均匀程度
+- 公式：`H = -Σ(p_i * log2(p_i))`，其中 p_i 是第 i 类指令的占比
+
+**技术实现**:
+```cpp
+double ComputeInstructionEntropy(const vector<UINT64>& counts) {
+    UINT64 total = 0;
+    for (UINT64 c : counts) total += c;
+    if (total == 0) return 0.0;
+
+    double entropy = 0.0;
+    for (UINT64 c : counts) {
+        if (c > 0) {
+            double p = (double)c / (double)total;
+            entropy -= p * log2(p);
+        }
+    }
+    return entropy;
+}
+```
+
+**指标说明**:
+
+| 指标 | 说明 |
+|------|------|
+| `inst_type_entropy_static` | 基于静态指令分布计算的熵 |
+| `inst_type_entropy_exec` | 基于动态执行分布计算的熵 |
+
+**熵值解释**:
+| 熵值范围 | 含义 |
+|----------|------|
+| 0 | 所有指令为同一类型（完全单一） |
+| 1.0 ~ 2.0 | 指令类型较为集中 |
+| 2.0 ~ 3.0 | 指令类型分布中等 |
+| > 3.0 | 指令类型分布均匀（多样性高） |
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 低熵（类型单一） | 错误影响可预测，但缺乏多样性保护 |
+| 高熵（类型多样） | 错误可能影响多种操作，但有自然冗余 |
+| 静态熵 ≈ 动态熵 | 执行路径覆盖均匀 |
+| 静态熵 >> 动态熵 | 热点代码集中在特定类型指令 |
+
+**研究假设**:
+- 高熵函数可能具有更好的自然容错能力（指令多样性）
+- 静态熵与动态熵的差异反映代码执行的热点特征
 
 ---
 
@@ -588,6 +686,48 @@ if (IsDataMovementInstruction(ins)) {
 
 ---
 
+### 7.5 loop_depth_max (最大循环嵌套深度)
+
+**原理说明**:
+- 跟踪函数执行过程中循环的嵌套深度
+- 通过监控回边的执行状态，维护当前活跃循环集合
+- 当回边执行（循环继续）时，将循环加入活跃集合
+- 当回边不执行（循环退出）时，将循环从活跃集合移除
+
+**技术实现**:
+```cpp
+VOID TrackLoopExecution(FunctionProfile* profile, ADDRINT backedge_addr, BOOL taken) {
+    if (taken) {
+        // 回边执行，循环继续
+        if (profile->active_loops.find(backedge_addr) == profile->active_loops.end()) {
+            profile->active_loops.insert(backedge_addr);
+            profile->current_loop_depth = profile->active_loops.size();
+            if (profile->current_loop_depth > profile->loop_depth_max) {
+                profile->loop_depth_max = profile->current_loop_depth;
+            }
+        }
+    } else {
+        // 回边未执行，循环退出
+        profile->active_loops.erase(backedge_addr);
+        profile->current_loop_depth = profile->active_loops.size();
+    }
+}
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高循环嵌套深度 | 错误放大效应更强，内层循环错误影响范围大 |
+| 深层嵌套循环 | 控制流复杂，故障传播路径多 |
+| 嵌套深度=1 | 简单循环结构，错误影响相对可控 |
+
+**研究假设**:
+- 嵌套循环中的错误会被多层循环放大
+- 高嵌套深度的函数对控制流错误更敏感
+- 结合 `loop_iter_total` 可评估总体循环复杂度
+
+---
+
 ## 八、数据依赖指标 (F类) [可选]
 
 需要 `-enable_dep` 参数启用，有一定性能开销。
@@ -668,7 +808,213 @@ if (IsDataMovementInstruction(ins)) {
 
 ---
 
-## 十、指标汇总表
+## 十、圈复杂度指标 (H类)
+
+圈复杂度指标反映程序控制流的复杂程度，包括静态圈复杂度（基于所有可能路径）和动态圈复杂度（基于实际执行路径）。
+
+### 10.1 bbl_static (静态基本块数量)
+
+**原理说明**:
+- 函数中静态分析得到的基本块（BBL）数量
+- 基本块是没有分支的连续指令序列
+- 通过识别跳转目标和控制流指令边界来划分
+
+**技术实现**:
+```cpp
+// 识别BBL头：函数入口、跳转目标、控制流指令的下一条指令
+set<ADDRINT> bbl_heads;
+bbl_heads.insert(rtn_addr);  // 函数入口
+
+for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
+    if (INS_IsDirectControlFlow(ins)) {
+        ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+        if (target >= profile.start_addr && target < profile.end_addr) {
+            bbl_heads.insert(target);
+        }
+    }
+    if (INS_IsControlFlow(ins)) {
+        INS next = INS_Next(ins);
+        if (INS_Valid(next)) {
+            bbl_heads.insert(INS_Address(next));
+        }
+    }
+}
+profile.bbl_static = bbl_heads.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高BBL数量 | 控制流复杂，故障传播路径多 |
+| 低BBL数量 | 简单顺序执行，错误影响可预测 |
+
+---
+
+### 10.2 edge_static (静态控制流边数量)
+
+**原理说明**:
+- 函数中静态分析得到的控制流边数量
+- 边类型包括：
+  - **Fall-through边**：条件分支不跳转时的顺序执行
+  - **跳转边**：分支指令跳转到目标地址
+  - **顺序边**：被跳转目标分割的BBL之间的连接
+
+**技术实现**:
+```cpp
+set<std::pair<ADDRINT, ADDRINT>> static_edges;
+ADDRINT current_bbl_start = rtn_addr;
+
+for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
+    INS next_ins = INS_Next(ins);
+    if (INS_Valid(next_ins)) {
+        ADDRINT next_pc = INS_Address(next_ins);
+        if (bbl_heads.find(next_pc) != bbl_heads.end()) {
+            // 当前指令是BBL的最后一条
+            if (INS_IsControlFlow(ins)) {
+                // 添加跳转边
+                if (INS_IsDirectControlFlow(ins)) {
+                    ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+                    if (target >= profile.start_addr && target < profile.end_addr) {
+                        static_edges.insert(std::make_pair(current_bbl_start, target));
+                    }
+                }
+                // 添加fall-through边
+                if (INS_HasFallThrough(ins)) {
+                    static_edges.insert(std::make_pair(current_bbl_start, next_pc));
+                }
+            } else {
+                // 顺序边
+                static_edges.insert(std::make_pair(current_bbl_start, next_pc));
+            }
+            current_bbl_start = next_pc;
+        }
+    }
+}
+profile.edge_static = static_edges.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高边数 | 控制流转移多，分支决策复杂 |
+| 边数接近BBL数 | 线性执行为主，控制流简单 |
+
+---
+
+### 10.3 static_cyclomatic (静态圈复杂度)
+
+**原理说明**:
+- 基于静态分析的所有可能控制流路径计算
+- 公式：`Static_CC = E - N + 2`
+  - E = edge_static（静态边数）
+  - N = bbl_static（静态节点数）
+- 最小值为1（纯顺序执行）
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高静态CC | 代码结构复杂，测试难度大 |
+| 低静态CC | 代码结构简单，易于测试和验证 |
+
+---
+
+### 10.4 bbl_exec (基本块执行次数)
+
+**原理说明**:
+- 运行时所有基本块的总执行次数
+- 反映函数的动态执行热度
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高执行次数 | 热点代码，故障暴露概率高 |
+| 低执行次数 | 冷路径，故障可能潜伏 |
+
+---
+
+### 10.5 unique_bbl_exec (唯一基本块执行数)
+
+**原理说明**:
+- 实际执行过的不同基本块数量（去重）
+- 反映代码覆盖率：`覆盖率 = unique_bbl_exec / bbl_static`
+
+**技术实现**:
+```cpp
+VOID TrackBBLExecution(FunctionProfile* profile, ADDRINT bbl_addr) {
+    __sync_fetch_and_add(&(profile->bbl_exec), 1);
+
+    PIN_GetLock(&g_lock, 1);
+    profile->executed_bbls.insert(bbl_addr);
+    PIN_ReleaseLock(&g_lock);
+}
+// 最终: profile.unique_bbl_exec = profile.executed_bbls.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| unique_bbl_exec ≈ bbl_static | 高覆盖率，大部分路径被执行 |
+| unique_bbl_exec << bbl_static | 低覆盖率，存在未测试路径 |
+
+---
+
+### 10.6 unique_edge_exec (唯一边执行数)
+
+**原理说明**:
+- 实际执行过的不同控制流边数量
+- 边表示从一个BBL到另一个BBL的控制流转移
+
+**技术实现**:
+```cpp
+VOID TrackBBLExecution(FunctionProfile* profile, ADDRINT bbl_addr) {
+    // ...
+    if (profile->last_bbl_addr != 0) {
+        profile->executed_edges.insert(std::make_pair(profile->last_bbl_addr, bbl_addr));
+    }
+    profile->last_bbl_addr = bbl_addr;
+}
+// 最终: profile.unique_edge_exec = profile.executed_edges.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高边数 | 控制流转移频繁，分支决策多 |
+| 边数接近BBL数 | 线性执行为主 |
+
+---
+
+### 10.7 dynamic_cyclomatic (动态圈复杂度)
+
+**原理说明**:
+- 基于实际执行的控制流图计算圈复杂度
+- 公式：`Dynamic_CC = E - N + 2`
+  - E = unique_edge_exec（实际执行的唯一边数）
+  - N = unique_bbl_exec（实际执行的唯一节点数）
+- 最小值为1（纯顺序执行）
+
+**与静态圈复杂度的区别**:
+| 指标 | 静态圈复杂度 | 动态圈复杂度 |
+|------|-------------|-------------|
+| 计算时机 | 编译时/静态分析 | 运行时 |
+| 数据来源 | 所有可能路径 | 实际执行路径 |
+| 应用场景 | 代码质量评估 | 运行时行为分析 |
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高动态CC | 实际执行路径复杂，故障传播路径多 |
+| 动态CC < 静态CC | 部分分支未执行，存在未测试路径 |
+| 动态CC = 1 | 纯顺序执行，无分支决策 |
+
+**研究假设**:
+- 动态圈复杂度高的函数对控制流错误更敏感
+- 动态CC与静态CC的差异反映测试覆盖情况
+- 结合 `branch_taken_exec` 和 `branch_not_taken_exec` 可分析分支行为
+
+---
+
+## 十一、指标汇总表
 
 | 类别 | 指标名 | 类型 | 说明 |
 |------|--------|------|------|
@@ -688,13 +1034,30 @@ if (IsDataMovementInstruction(ins)) {
 | B2 | logic_static | 静态 | 逻辑指令静态数量 |
 | B2 | float_static | 静态 | 浮点指令静态数量 |
 | B2 | simd_static | 静态 | SIMD指令静态数量 |
+| B2 | pure_compute_static | 静态 | 纯计算指令静态数量 |
+| B2 | data_movement_static | 静态 | 数据移动指令静态数量 |
+| B2 | compare_static | 静态 | 比较指令静态数量 |
+| B2 | stack_static | 静态 | 栈操作指令静态数量 |
+| B2 | string_static | 静态 | 字符串指令静态数量 |
+| B2 | nop_static | 静态 | NOP指令静态数量 |
+| B2 | other_static | 静态 | 其他指令静态数量 |
 | B2 | arith_exec | 动态 | 算术指令执行次数 |
+| B2 | logic_exec | 动态 | 逻辑指令执行次数 |
 | B2 | float_exec | 动态 | 浮点指令执行次数 |
+| B2 | simd_exec | 动态 | SIMD指令执行次数 |
+| B2 | compare_exec | 动态 | 比较指令执行次数 |
+| B2 | stack_exec | 动态 | 栈操作指令执行次数 |
+| B2 | string_exec | 动态 | 字符串指令执行次数 |
+| B2 | nop_exec | 动态 | NOP指令执行次数 |
+| B2 | other_exec | 动态 | 其他指令执行次数 |
+| B3 | inst_type_entropy_static | 静态 | 静态指令类型分布熵 |
+| B3 | inst_type_entropy_exec | 动态 | 动态指令类型分布熵 |
 | C | branch_static | 静态 | 分支指令静态数量 |
 | C | branch_exec | 动态 | 分支指令执行次数 |
 | C | loop_static | 静态 | 循环静态数量 |
 | C | return_static | 静态 | 返回点静态数量 |
 | C | call_static | 静态 | 函数调用静态数量 |
+| C | call_other_exec | 动态 | 调用其他函数执行次数 |
 | C | indirect_exec | 动态 | 间接跳转执行次数 |
 | D | reg_read_exec | 动态 | 寄存器读取执行次数 |
 | D | reg_write_exec | 动态 | 寄存器写入执行次数 |
@@ -708,6 +1071,7 @@ if (IsDataMovementInstruction(ins)) {
 | E | uncond_branch_static | 静态 | 无条件跳转静态数量 |
 | E | loop_iter_total | 动态 | 循环总迭代次数 |
 | E | call_depth_max | 动态 | 最大调用深度 |
+| E | loop_depth_max | 动态 | 最大循环嵌套深度 |
 | F | def_use_pairs | 动态 | 定义-使用对总数 [可选] |
 | F | reg_dep_chain_max | 动态 | 最长寄存器依赖链 [可选] |
 | F | mem_to_reg_exec | 动态 | 内存→寄存器传递次数 [可选] |
@@ -715,10 +1079,17 @@ if (IsDataMovementInstruction(ins)) {
 | G | reg_lifetime_total | 动态 | 寄存器值总存活指令数 [可选] |
 | G | dead_write_exec | 动态 | 死写次数 [可选] |
 | G | first_use_dist_total | 动态 | 定义到首次使用的总距离 [可选] |
+| H | bbl_static | 静态 | 静态基本块数量 (N_static) |
+| H | edge_static | 静态 | 静态控制流边数量 (E_static) |
+| H | static_cyclomatic | 静态 | 静态圈复杂度 (E_static - N_static + 2) |
+| H | bbl_exec | 动态 | 基本块执行次数 |
+| H | unique_bbl_exec | 动态 | 实际执行的唯一基本块数 (N_dynamic) |
+| H | unique_edge_exec | 动态 | 实际执行的唯一边数 (E_dynamic) |
+| H | dynamic_cyclomatic | 动态 | 动态圈复杂度 (E_dynamic - N_dynamic + 2) |
 
 ---
 
-## 十一、参考文献
+## 十二、参考文献
 
 1. Reis, G. A., et al. "SWIFT: Software implemented fault tolerance." CGO 2005.
 2. Li, G., et al. "Understanding error propagation in deep learning neural network (DNN) accelerators and applications." SC 2017.
@@ -727,6 +1098,6 @@ if (IsDataMovementInstruction(ins)) {
 
 ---
 
-*文档版本: 3.0*
+*文档版本: 3.2*
 *命名规范: _static=静态数量, _exec=动态执行次数*
 *最后更新: 2024*

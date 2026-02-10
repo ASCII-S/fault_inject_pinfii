@@ -82,6 +82,17 @@ struct FunctionProfile {
     // B2类新增静态指标
     UINT32 pure_compute_static;     // 纯计算指令静态数量（不涉及内存的计算指令）
     UINT32 data_movement_static;    // 数据移动指令静态数量（MOV类）
+    // B2类细化指令类型（用于熵计算）
+    UINT32 compare_static;          // 比较指令静态数量: CMP/TEST等
+    UINT64 compare_exec;            // 比较指令执行次数(动态)
+    UINT32 stack_static;            // 栈操作指令静态数量: PUSH/POP等
+    UINT64 stack_exec;              // 栈操作指令执行次数(动态)
+    UINT32 string_static;           // 字符串指令静态数量: REP/MOVS/STOS等
+    UINT64 string_exec;             // 字符串指令执行次数(动态)
+    UINT32 nop_static;              // NOP指令静态数量
+    UINT64 nop_exec;                // NOP指令执行次数(动态)
+    UINT32 other_static;            // 其他未分类指令静态数量
+    UINT64 other_exec;              // 其他未分类指令执行次数(动态)
 
     // ========== C类: 控制流特性 ==========
     UINT32 branch_static;           // 分支指令静态数量
@@ -89,6 +100,7 @@ struct FunctionProfile {
     UINT32 loop_static;             // 循环静态数量(回边检测)
     UINT32 return_static;           // 返回点静态数量
     UINT32 call_static;             // 函数调用静态数量
+    UINT64 call_other_exec;         // 调用其他函数执行次数(动态)
     UINT64 indirect_exec;           // 间接跳转执行次数(动态)
 
     // ========== D类: 寄存器使用 ==========
@@ -109,6 +121,9 @@ struct FunctionProfile {
     UINT64 loop_iter_total;         // 循环总迭代次数(动态)
     UINT32 call_depth_max;          // 最大调用深度(动态)
     UINT32 current_call_depth;      // 运行时状态：当前调用深度(不输出)
+    UINT32 loop_depth_max;          // 最大循环嵌套深度(动态)
+    UINT32 current_loop_depth;      // 运行时状态：当前循环嵌套深度(不输出)
+    set<ADDRINT> active_loops;      // 运行时状态：当前活跃的循环回边地址(不输出)
 
     // ========== F类: 数据依赖 (可选启用) ==========
     UINT64 def_use_pairs;           // 定义-使用对总数(动态)
@@ -126,6 +141,19 @@ struct FunctionProfile {
     // 运行时状态
     UINT64 reg_def_id[16];          // 寄存器定义时的指令ID
     bool reg_was_used[16];          // 寄存器是否被使用过
+
+    // ========== H类: 圈复杂度 ==========
+    // 静态圈复杂度
+    UINT32 bbl_static;              // 静态基本块数量 (N)
+    UINT32 edge_static;             // 静态控制流边数量 (E)
+    // 动态圈复杂度
+    UINT64 bbl_exec;                // 基本块执行次数(动态)
+    UINT32 unique_bbl_exec;         // 实际执行的唯一基本块数(动态)
+    UINT32 unique_edge_exec;        // 实际执行的唯一边数(动态)
+    // 运行时状态(不输出到JSON)
+    set<ADDRINT> executed_bbls;                         // 执行过的BBL地址集合
+    set<std::pair<ADDRINT, ADDRINT>> executed_edges;    // 执行过的边集合 (src, dst)
+    ADDRINT last_bbl_addr;          // 上一个执行的BBL地址
 
     // 构造函数：初始化所有字段
     FunctionProfile() :
@@ -162,12 +190,23 @@ struct FunctionProfile {
         data_movement_exec(0),
         pure_compute_static(0),
         data_movement_static(0),
+        compare_static(0),
+        compare_exec(0),
+        stack_static(0),
+        stack_exec(0),
+        string_static(0),
+        string_exec(0),
+        nop_static(0),
+        nop_exec(0),
+        other_static(0),
+        other_exec(0),
         // C类: 控制流特性
         branch_static(0),
         branch_exec(0),
         loop_static(0),
         return_static(0),
         call_static(0),
+        call_other_exec(0),
         indirect_exec(0),
         // D类: 寄存器使用
         reg_read_exec(0),
@@ -184,6 +223,8 @@ struct FunctionProfile {
         loop_iter_total(0),
         call_depth_max(0),
         current_call_depth(0),
+        loop_depth_max(0),
+        current_loop_depth(0),
         // F类: 数据依赖
         def_use_pairs(0),
         reg_dep_chain_max(0),
@@ -193,7 +234,14 @@ struct FunctionProfile {
         // G类: 生命周期
         reg_lifetime_total(0),
         dead_write_exec(0),
-        first_use_dist_total(0)
+        first_use_dist_total(0),
+        // H类: 圈复杂度
+        bbl_static(0),
+        edge_static(0),
+        bbl_exec(0),
+        unique_bbl_exec(0),
+        unique_edge_exec(0),
+        last_bbl_addr(0)
     {
         // 初始化数组
         for (int i = 0; i < 16; i++) {
@@ -201,6 +249,7 @@ struct FunctionProfile {
             reg_def_id[i] = 0;
             reg_was_used[i] = false;
         }
+        // set 容器自动初始化为空
     }
 };
 

@@ -55,8 +55,37 @@
 | `logic_static` | 静态 | 逻辑指令静态数量 |
 | `float_static` | 静态 | 浮点指令静态数量 |
 | `simd_static` | 静态 | SIMD指令静态数量 |
+| `pure_compute_static` | 静态 | 纯计算指令静态数量 |
+| `data_movement_static` | 静态 | 数据移动指令静态数量 |
+| `compare_static` | 静态 | 比较指令静态数量 |
+| `stack_static` | 静态 | 栈操作指令静态数量 |
+| `string_static` | 静态 | 字符串指令静态数量 |
+| `nop_static` | 静态 | NOP指令静态数量 |
+| `other_static` | 静态 | 其他指令静态数量 |
 | `arith_exec` | 动态 | 算术指令执行次数 |
+| `logic_exec` | 动态 | 逻辑指令执行次数 |
 | `float_exec` | 动态 | 浮点指令执行次数 |
+| `simd_exec` | 动态 | SIMD指令执行次数 |
+| `compare_exec` | 动态 | 比较指令执行次数 |
+| `stack_exec` | 动态 | 栈操作指令执行次数 |
+| `string_exec` | 动态 | 字符串指令执行次数 |
+| `nop_exec` | 动态 | NOP指令执行次数 |
+| `other_exec` | 动态 | 其他指令执行次数 |
+
+---
+
+## 四点五、指令类型分布熵 (B3类)
+
+| 指标 | 类型 | 说明 |
+|------|------|------|
+| `inst_type_entropy_static` | 静态 | 静态指令类型分布熵 |
+| `inst_type_entropy_exec` | 动态 | 动态指令类型分布熵 |
+
+**熵值说明**:
+- 公式：`H = -Σ(p_i * log2(p_i))`
+- 熵值范围：0 ~ log2(N)，N为指令类型数
+- 熵值=0：所有指令为同一类型
+- 熵值越大：指令类型分布越均匀
 
 ---
 
@@ -69,6 +98,7 @@
 | `loop_static` | 静态 | 循环静态数量 |
 | `return_static` | 静态 | 返回点静态数量 |
 | `call_static` | 静态 | 函数调用静态数量 |
+| `call_other_exec` | 动态 | 调用其他函数执行次数 |
 | `indirect_exec` | 动态 | 间接跳转执行次数 |
 
 ---
@@ -96,6 +126,7 @@
 | `uncond_branch_static` | 静态 | 无条件跳转静态数量 |
 | `loop_iter_total` | 动态 | 循环总迭代次数 |
 | `call_depth_max` | 动态 | 最大调用深度 |
+| `loop_depth_max` | 动态 | 最大循环嵌套深度 |
 
 ---
 
@@ -124,7 +155,28 @@
 
 ---
 
-## 十、JSON输出结构
+## 十、圈复杂度 (H类)
+
+| 指标 | 类型 | 说明 |
+|------|------|------|
+| `bbl_static` | 静态 | 静态基本块数量 (N_static) |
+| `edge_static` | 静态 | 静态控制流边数量 (E_static) |
+| `static_cyclomatic` | 静态 | 静态圈复杂度 = E_static - N_static + 2 |
+| `bbl_exec` | 动态 | 基本块执行次数 |
+| `unique_bbl_exec` | 动态 | 实际执行的唯一基本块数 (N_dynamic) |
+| `unique_edge_exec` | 动态 | 实际执行的唯一边数 (E_dynamic) |
+| `dynamic_cyclomatic` | 动态 | 动态圈复杂度 = E_dynamic - N_dynamic + 2 |
+
+**说明**:
+- 静态圈复杂度：基于静态分析的所有可能控制流路径
+- 动态圈复杂度：基于实际执行的控制流路径
+- 公式：`CC = E - N + 2`（E=边数，N=节点数）
+- 最小值为1（顺序执行无分支）
+- `dynamic_cyclomatic <= static_cyclomatic`（动态覆盖的路径 ≤ 静态所有路径）
+
+---
+
+## 十一、JSON输出结构
 
 ```json
 {
@@ -152,8 +204,26 @@
     "logic_static": 5,
     "float_static": 0,
     "simd_static": 0,
+    "pure_compute_static": 12,
+    "data_movement_static": 15,
+    "compare_static": 4,
+    "stack_static": 6,
+    "string_static": 0,
+    "nop_static": 1,
+    "other_static": 2,
     "arith_exec": 100,
-    "float_exec": 0
+    "logic_exec": 50,
+    "float_exec": 0,
+    "simd_exec": 0,
+    "compare_exec": 40,
+    "stack_exec": 60,
+    "string_exec": 0,
+    "nop_exec": 10,
+    "other_exec": 20
+  },
+  "instruction_entropy": {
+    "inst_type_entropy_static": 2.8745,
+    "inst_type_entropy_exec": 2.5632
   },
   "control_flow": {
     "branch_static": 8,
@@ -161,6 +231,7 @@
     "loop_static": 2,
     "return_static": 1,
     "call_static": 3,
+    "call_other_exec": 25,
     "indirect_exec": 10
   },
   "register_usage": {
@@ -177,7 +248,8 @@
     "cond_branch_static": 6,
     "uncond_branch_static": 2,
     "loop_iter_total": 100,
-    "call_depth_max": 5
+    "call_depth_max": 5,
+    "loop_depth_max": 3
   },
   "data_dependency": {
     "def_use_pairs": 450,
@@ -189,13 +261,22 @@
     "reg_lifetime_total": 2500,
     "dead_write_exec": 10,
     "first_use_dist_total": 300
+  },
+  "cyclomatic_complexity": {
+    "bbl_static": 12,
+    "edge_static": 15,
+    "static_cyclomatic": 5,
+    "bbl_exec": 150,
+    "unique_bbl_exec": 10,
+    "unique_edge_exec": 14,
+    "dynamic_cyclomatic": 6
   }
 }
 ```
 
 ---
 
-## 十一、使用示例
+## 十二、使用示例
 
 ```bash
 # 基本使用
@@ -217,11 +298,12 @@ with open('output.json') as f:
 for func in data['functions']:
     name = func['function_name']
     inst_exec = func['execution_stats']['inst_exec']
-    reg_read = func['register_usage']['reg_read_exec']
-    call_depth = func['control_flow_detail']['call_depth_max']
-    print(f"{name}: 指令={inst_exec}, 寄存器读={reg_read}, 最大调用深度={call_depth}")
+    cc = func['cyclomatic_complexity']
+    dynamic_cc = cc['dynamic_cyclomatic']
+    unique_bbl = cc['unique_bbl_exec']
+    print(f"{name}: 指令={inst_exec}, 动态圈复杂度={dynamic_cc}, 执行BBL数={unique_bbl}")
 ```
 
 ---
 
-*快速参考表 v3.0*
+*快速参考表 v3.1*
