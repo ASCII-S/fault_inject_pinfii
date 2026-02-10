@@ -596,6 +596,94 @@ double ComputeInstructionEntropy(const vector<UINT64>& counts) {
 
 ---
 
+## 五点五、函数间调用图指标 (I类)
+
+I类指标用于分析函数在调用图中的位置和耦合度，反映函数间的依赖关系。
+
+### 5.5.1 fan_in (入度)
+
+**原理说明**:
+- 统计有多少个**不同的函数**调用了本函数
+- 反映函数被依赖的程度（被多少函数使用）
+
+**技术实现**:
+```cpp
+// 在CALL指令处记录调用边
+VOID RecordCallEdge(FunctionProfile* caller_profile, ADDRINT callee_addr) {
+    // 记录callee被caller调用
+    g_function_profiles[callee_addr].callers_set.insert(caller_profile->start_addr);
+}
+// 最终: profile.fan_in = profile.callers_set.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高fan_in | 被多个函数依赖，故障影响范围广 |
+| 低fan_in | 被少数函数依赖，故障影响局部 |
+| fan_in=0 | 入口函数或未被调用的函数 |
+
+---
+
+### 5.5.2 fan_out (出度)
+
+**原理说明**:
+- 统计本函数调用了多少个**不同的函数**
+- 反映函数对其他函数的依赖程度
+
+**技术实现**:
+```cpp
+// 在CALL指令处记录调用边
+VOID RecordCallEdge(FunctionProfile* caller_profile, ADDRINT callee_addr) {
+    // 记录caller调用了callee
+    caller_profile->callees_set.insert(callee_addr);
+}
+// 最终: profile.fan_out = profile.callees_set.size();
+```
+
+**弹性关联**:
+| 特征 | 弹性影响 |
+|------|---------|
+| 高fan_out | 依赖多个函数，易受其他函数故障影响 |
+| 低fan_out | 依赖少，相对独立 |
+| fan_out=0 | 叶子函数，不调用其他函数 |
+
+---
+
+### 5.5.3 fan_in/fan_out 与 call_exec/call_other_exec 的区别
+
+| 指标 | 含义 | 统计维度 | 示例 |
+|------|------|---------|------|
+| `call_exec` | 本函数被调用的**总次数** | 频率 | 被调用100次 |
+| `fan_in` | 有**多少个不同函数**调用了本函数 | 唯一调用者数 | 被3个不同函数调用 |
+| `call_other_exec` | 本函数调用其他函数的**总次数** | 频率 | 调用了其他函数50次 |
+| `fan_out` | 本函数调用了**多少个不同函数** | 唯一被调用者数 | 调用了5个不同函数 |
+
+**具体示例**:
+```
+假设调用关系：
+main() ──调用10次──> foo()
+bar()  ──调用20次──> foo()
+baz()  ──调用70次──> foo()
+
+foo() ──调用30次──> helper1()
+foo() ──调用20次──> helper2()
+
+对于 foo() 函数：
+- call_exec = 100 (被调用总次数: 10+20+70)
+- fan_in = 3 (有3个不同函数调用它: main, bar, baz)
+- call_other_exec = 50 (调用其他函数总次数: 30+20)
+- fan_out = 2 (调用了2个不同函数: helper1, helper2)
+```
+
+**研究假设**:
+- 高fan_in的函数是"核心函数"，故障影响范围大
+- 高fan_out的函数是"协调函数"，易受级联故障影响
+- fan_in × call_exec 可衡量函数的"影响力"
+- fan_out × call_other_exec 可衡量函数的"脆弱性"
+
+---
+
 ## 六、寄存器使用指标 (D类)
 
 ### 6.1 reg_read_exec / reg_write_exec (寄存器读写执行次数)
@@ -1059,6 +1147,8 @@ VOID TrackBBLExecution(FunctionProfile* profile, ADDRINT bbl_addr) {
 | C | call_static | 静态 | 函数调用静态数量 |
 | C | call_other_exec | 动态 | 调用其他函数执行次数 |
 | C | indirect_exec | 动态 | 间接跳转执行次数 |
+| I | fan_in | 动态 | 入度：有多少不同函数调用本函数 |
+| I | fan_out | 动态 | 出度：本函数调用多少不同函数 |
 | D | reg_read_exec | 动态 | 寄存器读取执行次数 |
 | D | reg_write_exec | 动态 | 寄存器写入执行次数 |
 | D | reg_read_static | 静态 | 静态寄存器读操作数 |

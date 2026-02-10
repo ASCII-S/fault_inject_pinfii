@@ -103,6 +103,19 @@
 
 ---
 
+## 五点五、函数间调用图 (I类)
+
+| 指标 | 类型 | 说明 |
+|------|------|------|
+| `fan_in` | 动态 | 入度：有多少不同函数调用本函数 |
+| `fan_out` | 动态 | 出度：本函数调用多少不同函数 |
+
+**与 call_exec/call_other_exec 的区别**:
+- `call_exec` / `call_other_exec` = **频率**（调用多少次）
+- `fan_in` / `fan_out` = **耦合度**（与多少个不同函数有关系）
+
+---
+
 ## 六、寄存器使用 (D类)
 
 | 指标 | 类型 | 说明 |
@@ -233,6 +246,10 @@
     "call_static": 3,
     "call_other_exec": 25,
     "indirect_exec": 10
+  },
+  "call_graph": {
+    "fan_in": 3,
+    "fan_out": 5
   },
   "register_usage": {
     "reg_read_exec": 500,

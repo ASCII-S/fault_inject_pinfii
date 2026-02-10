@@ -598,6 +598,27 @@ VOID TrackCallDepthExit(FunctionProfile* profile) {
     }
 }
 
+// ========== I类: 函数间调用图回调 ==========
+
+/**
+ * 记录调用边：caller调用callee
+ * 用于计算fan_in和fan_out
+ * @param caller_profile 调用者的profile
+ * @param callee_addr 被调用函数的地址
+ */
+VOID RecordCallEdge(FunctionProfile* caller_profile, ADDRINT callee_addr) {
+    // 记录caller调用了callee (用于计算caller的fan_out)
+    PIN_GetLock(&g_lock, 1);
+    caller_profile->callees_set.insert(callee_addr);
+
+    // 记录callee被caller调用 (用于计算callee的fan_in)
+    // 需要找到callee的profile
+    if (g_function_profiles.find(callee_addr) != g_function_profiles.end()) {
+        g_function_profiles[callee_addr].callers_set.insert(caller_profile->start_addr);
+    }
+    PIN_ReleaseLock(&g_lock);
+}
+
 // ========== F类: 数据依赖回调 ==========
 
 /**
@@ -1064,6 +1085,22 @@ VOID InstrumentDynamicAnalysis(INS ins, FunctionProfile* profile, ADDRINT pc) {
         INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)TrackCallDepthEnter,
                        IARG_PTR, profile,
                        IARG_END);
+
+        // I类: 记录调用边（用于fan_in/fan_out）
+        // 对于直接调用，可以静态获取目标地址
+        if (INS_IsDirectControlFlow(ins)) {
+            ADDRINT target = INS_DirectControlFlowTargetAddress(ins);
+            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)RecordCallEdge,
+                           IARG_PTR, profile,
+                           IARG_ADDRINT, target,
+                           IARG_END);
+        } else {
+            // 对于间接调用，运行时获取目标地址
+            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)RecordCallEdge,
+                           IARG_PTR, profile,
+                           IARG_BRANCH_TARGET_ADDR,
+                           IARG_END);
+        }
     }
     if (INS_IsRet(ins)) {
         INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)TrackCallDepthExit,
@@ -1343,6 +1380,10 @@ VOID Fini(INT32 code, VOID *v) {
         profile.unique_bbl_exec = profile.executed_bbls.size();
         profile.unique_edge_exec = profile.executed_edges.size();
 
+        // I类: 计算fan_in/fan_out
+        profile.fan_in = profile.callers_set.size();
+        profile.fan_out = profile.callees_set.size();
+
         if (!first_func) {
             outFile << ",\n";
         }
@@ -1460,6 +1501,12 @@ VOID Fini(INT32 code, VOID *v) {
         outFile << "        \"call_static\": " << profile.call_static << ",\n";
         outFile << "        \"call_other_exec\": " << profile.call_other_exec << ",\n";
         outFile << "        \"indirect_exec\": " << profile.indirect_exec << "\n";
+        outFile << "      },\n";
+
+        // I类：函数间调用图
+        outFile << "      \"call_graph\": {\n";
+        outFile << "        \"fan_in\": " << profile.fan_in << ",\n";
+        outFile << "        \"fan_out\": " << profile.fan_out << "\n";
         outFile << "      },\n";
 
         // D类：寄存器使用

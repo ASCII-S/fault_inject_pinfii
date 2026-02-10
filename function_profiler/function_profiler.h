@@ -103,6 +103,12 @@ struct FunctionProfile {
     UINT64 call_other_exec;         // 调用其他函数执行次数(动态)
     UINT64 indirect_exec;           // 间接跳转执行次数(动态)
 
+    // ========== I类: 函数间调用图 ==========
+    UINT32 fan_in;                  // 入度：有多少不同函数调用本函数(动态)
+    UINT32 fan_out;                 // 出度：本函数调用多少不同函数(动态)
+    set<ADDRINT> callers_set;       // 运行时状态：调用本函数的函数地址集合(不输出)
+    set<ADDRINT> callees_set;       // 运行时状态：本函数调用的函数地址集合(不输出)
+
     // ========== D类: 寄存器使用 ==========
     UINT64 reg_read_exec;           // 寄存器读取执行次数(动态)
     UINT64 reg_write_exec;          // 寄存器写入执行次数(动态)
@@ -208,6 +214,9 @@ struct FunctionProfile {
         call_static(0),
         call_other_exec(0),
         indirect_exec(0),
+        // I类: 函数间调用图
+        fan_in(0),
+        fan_out(0),
         // D类: 寄存器使用
         reg_read_exec(0),
         reg_write_exec(0),
