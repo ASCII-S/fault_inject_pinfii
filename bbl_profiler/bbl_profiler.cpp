@@ -222,6 +222,10 @@ string GetFunctionName(ADDRINT addr) {
     return name;
 }
 
+// ========== 内存访问模式分析阈值 ==========
+#define SEQUENTIAL_THRESHOLD 64   // ±64字节内视为连续（缓存行大小）
+#define STRIDE_VARIANCE_THRESHOLD 8  // stride变化在8字节内视为步长访问
+
 // ========== 动态分析回调函数 ==========
 
 /**
@@ -235,17 +239,71 @@ VOID CountBBLExec(BBLProfile* profile, UINT32 inst_count) {
 }
 
 /**
- * 内存读计数回调
+ * 内存读访问模式分析回调
+ * 统计读次数并分析访问模式（连续/步长/随机）
  */
-VOID CountMemoryRead(BBLProfile* profile) {
+VOID AnalyzeMemoryReadPattern(BBLProfile* profile, ADDRINT addr) {
     __sync_fetch_and_add(&(profile->mem_read_exec), 1);
+
+    if (profile->has_last_read) {
+        INT64 stride = (INT64)addr - (INT64)profile->last_read_addr;
+        INT64 abs_stride = stride < 0 ? -stride : stride;
+
+        if (abs_stride <= SEQUENTIAL_THRESHOLD) {
+            // 连续访问：地址差在缓存行范围内
+            __sync_fetch_and_add(&(profile->seq_read_exec), 1);
+        } else {
+            // 检查stride是否稳定（与上次stride相近）
+            INT64 stride_diff = stride - profile->last_read_stride;
+            if (stride_diff < 0) stride_diff = -stride_diff;
+
+            if (stride_diff <= STRIDE_VARIANCE_THRESHOLD) {
+                // 步长访问：stride稳定
+                __sync_fetch_and_add(&(profile->stride_read_exec), 1);
+            } else {
+                // 随机访问：stride变化大
+                __sync_fetch_and_add(&(profile->random_read_exec), 1);
+            }
+        }
+        profile->last_read_stride = stride;
+    }
+
+    profile->last_read_addr = addr;
+    profile->has_last_read = true;
 }
 
 /**
- * 内存写计数回调
+ * 内存写访问模式分析回调
+ * 统计写次数并分析访问模式（连续/步长/随机）
  */
-VOID CountMemoryWrite(BBLProfile* profile) {
+VOID AnalyzeMemoryWritePattern(BBLProfile* profile, ADDRINT addr) {
     __sync_fetch_and_add(&(profile->mem_write_exec), 1);
+
+    if (profile->has_last_write) {
+        INT64 stride = (INT64)addr - (INT64)profile->last_write_addr;
+        INT64 abs_stride = stride < 0 ? -stride : stride;
+
+        if (abs_stride <= SEQUENTIAL_THRESHOLD) {
+            // 连续访问
+            __sync_fetch_and_add(&(profile->seq_write_exec), 1);
+        } else {
+            // 检查stride是否稳定
+            INT64 stride_diff = stride - profile->last_write_stride;
+            if (stride_diff < 0) stride_diff = -stride_diff;
+
+            if (stride_diff <= STRIDE_VARIANCE_THRESHOLD) {
+                // 步长访问
+                __sync_fetch_and_add(&(profile->stride_write_exec), 1);
+            } else {
+                // 随机访问
+                __sync_fetch_and_add(&(profile->random_write_exec), 1);
+            }
+        }
+        profile->last_write_stride = stride;
+    }
+
+    profile->last_write_addr = addr;
+    profile->has_last_write = true;
 }
 
 /**
@@ -588,17 +646,19 @@ VOID Trace(TRACE trace, VOID *v) {
 
         // 遍历每条指令进行动态插桩
         for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
-            // 内存读
+            // 内存读 - 使用地址分析访问模式
             if (INS_IsMemoryRead(ins)) {
-                INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountMemoryRead,
+                INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)AnalyzeMemoryReadPattern,
                                IARG_PTR, &profile,
+                               IARG_MEMORYREAD_EA,
                                IARG_END);
             }
 
-            // 内存写
+            // 内存写 - 使用地址分析访问模式
             if (INS_IsMemoryWrite(ins)) {
-                INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)CountMemoryWrite,
+                INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)AnalyzeMemoryWritePattern,
                                IARG_PTR, &profile,
+                               IARG_MEMORYWRITE_EA,
                                IARG_END);
             }
 
@@ -805,20 +865,34 @@ VOID Fini(INT32 code, VOID *v) {
         outFile << "        \"has_indirect_branch\": " << (profile.has_indirect_branch ? "true" : "false") << "\n";
         outFile << "      },\n";
 
-        // D类：计算特征
-        outFile << "      \"compute\": {\n";
+        // D类：数据流
+        outFile << "      \"data_flow\": {\n";
         outFile << "        \"mem_read_static\": " << profile.mem_read_static << ",\n";
         outFile << "        \"mem_write_static\": " << profile.mem_write_static << ",\n";
         outFile << "        \"mem_inst_static\": " << profile.mem_inst_static << ",\n";
+        outFile << "        \"mem_read_exec\": " << profile.mem_read_exec << ",\n";
+        outFile << "        \"mem_write_exec\": " << profile.mem_write_exec << ",\n";
+        outFile << "        \"mem_inst_exec\": " << profile.mem_inst_exec << "\n";
+        outFile << "      },\n";
+
+        // D2类：内存访问模式
+        outFile << "      \"memory_access_pattern\": {\n";
+        outFile << "        \"seq_read_exec\": " << profile.seq_read_exec << ",\n";
+        outFile << "        \"stride_read_exec\": " << profile.stride_read_exec << ",\n";
+        outFile << "        \"random_read_exec\": " << profile.random_read_exec << ",\n";
+        outFile << "        \"seq_write_exec\": " << profile.seq_write_exec << ",\n";
+        outFile << "        \"stride_write_exec\": " << profile.stride_write_exec << ",\n";
+        outFile << "        \"random_write_exec\": " << profile.random_write_exec << "\n";
+        outFile << "      },\n";
+
+        // D3类：计算特征
+        outFile << "      \"compute\": {\n";
         outFile << "        \"arith_static\": " << profile.arith_static << ",\n";
         outFile << "        \"logic_static\": " << profile.logic_static << ",\n";
         outFile << "        \"float_static\": " << profile.float_static << ",\n";
         outFile << "        \"simd_static\": " << profile.simd_static << ",\n";
         outFile << "        \"data_movement_static\": " << profile.data_movement_static << ",\n";
         outFile << "        \"pure_compute_static\": " << profile.pure_compute_static << ",\n";
-        outFile << "        \"mem_read_exec\": " << profile.mem_read_exec << ",\n";
-        outFile << "        \"mem_write_exec\": " << profile.mem_write_exec << ",\n";
-        outFile << "        \"mem_inst_exec\": " << profile.mem_inst_exec << ",\n";
         outFile << "        \"arith_exec\": " << profile.arith_exec << ",\n";
         outFile << "        \"logic_exec\": " << profile.logic_exec << ",\n";
         outFile << "        \"float_exec\": " << profile.float_exec << ",\n";

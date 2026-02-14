@@ -73,6 +73,23 @@ struct BBLProfile {
     UINT64 data_movement_exec;      // 数据移动指令执行次数
     UINT64 pure_compute_exec;       // 纯计算指令执行次数
 
+    // ========== D2类: 内存访问模式（动态） ==========
+    // 内存读访问模式
+    UINT64 seq_read_exec;           // 连续读次数（地址差 <= 缓存行大小）
+    UINT64 stride_read_exec;        // 步长读次数（固定stride）
+    UINT64 random_read_exec;        // 随机读次数
+    // 内存写访问模式
+    UINT64 seq_write_exec;          // 连续写次数
+    UINT64 stride_write_exec;       // 步长写次数
+    UINT64 random_write_exec;       // 随机写次数
+    // 运行时辅助（用于访问模式分析，不输出到JSON）
+    ADDRINT last_read_addr;         // 上一次读地址
+    ADDRINT last_write_addr;        // 上一次写地址
+    INT64 last_read_stride;         // 上一次读stride
+    INT64 last_write_stride;        // 上一次写stride
+    bool has_last_read;             // 是否有上一次读
+    bool has_last_write;            // 是否有上一次写
+
     // ========== E类: 数据依赖特征（简化版） ==========
     // 静态指标
     UINT32 live_in_count;           // 外部输入寄存器数（定义前使用）
@@ -133,6 +150,19 @@ struct BBLProfile {
         simd_exec(0),
         data_movement_exec(0),
         pure_compute_exec(0),
+        // D2类: 内存访问模式（动态）
+        seq_read_exec(0),
+        stride_read_exec(0),
+        random_read_exec(0),
+        seq_write_exec(0),
+        stride_write_exec(0),
+        random_write_exec(0),
+        last_read_addr(0),
+        last_write_addr(0),
+        last_read_stride(0),
+        last_write_stride(0),
+        has_last_read(false),
+        has_last_write(false),
         // E类: 数据依赖（静态）
         live_in_count(0),
         live_out_count(0),
